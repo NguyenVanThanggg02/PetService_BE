@@ -1,0 +1,28 @@
+[
+    {
+      "FullName": "John Doe",
+      "userName": "johndoe123",
+      "Email": "johndoe@example.com",
+      "Password": "password123",
+      "Gender": "Male",
+      "Dob": "1990-01-01",
+      "Phone": 1234567890,
+      "Address": "123 Main St, Anytown, USA",
+      "Role": "Admin",
+      "createdAt": "2024-03-06T08:00:00.000Z",
+      "updatedAt": "2024-03-06T08:00:00.000Z"
+    },
+    {
+      "FullName": "Jane Smith",
+      "userName": "janesmith456",
+      "Email": "janesmith@example.com",
+      "Password": "password456",
+      "Gender": "Female",
+      "Dob": "1995-05-15",
+      "Phone": 9876543210,
+      "Address": "456 Elm St, Othertown, USA",
+      "Role": "User",
+      "createdAt": "2024-03-06T08:00:00.000Z",
+      "updatedAt": "2024-03-06T08:00:00.000Z"
+    }
+  ]

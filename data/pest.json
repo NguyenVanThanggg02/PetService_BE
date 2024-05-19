@@ -1,0 +1,18 @@
+[
+    {
+        "breed": "Golden Retriever",
+        "gender": "Male",
+        "image": "https://example.com/images/golden_retriever_male.jpg",
+        "quantity": 10,
+        "description": "Adorable male Golden Retriever puppy, friendly and playful.",
+        "pettype": "Dog"
+    },
+    {
+        "breed": "Siamese",
+        "gender": "Female",
+        "image": "https://example.com/images/siamese_female.jpg",
+        "quantity": 8,
+        "description": "Beautiful female Siamese cat with striking blue eyes, affectionate and curious.",
+        "pettype": "Cat"
+    }
+]

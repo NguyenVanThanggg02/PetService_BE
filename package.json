@@ -8,10 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --watch server"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NguyenVanThanggg02/PetService_BE.git"
-  },
+  
   "author": "thangdev",
   "license": "ISC",
   "bugs": {
