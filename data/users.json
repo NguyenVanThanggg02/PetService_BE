@@ -1,28 +1,44 @@
 [
-    {
-      "FullName": "John Doe",
-      "userName": "johndoe123",
-      "Email": "johndoe@example.com",
-      "Password": "password123",
-      "Gender": "Male",
-      "Dob": "1990-01-01",
-      "Phone": 1234567890,
-      "Address": "123 Main St, Anytown, USA",
-      "Role": "Admin",
-      "createdAt": "2024-03-06T08:00:00.000Z",
-      "updatedAt": "2024-03-06T08:00:00.000Z"
+  {
+    "_id": {
+      "$oid": "6639786d743f79c9b97fc1c4"
     },
-    {
-      "FullName": "Jane Smith",
-      "userName": "janesmith456",
-      "Email": "janesmith@example.com",
-      "Password": "password456",
-      "Gender": "Female",
-      "Dob": "1995-05-15",
-      "Phone": 9876543210,
-      "Address": "456 Elm St, Othertown, USA",
-      "Role": "User",
-      "createdAt": "2024-03-06T08:00:00.000Z",
-      "updatedAt": "2024-03-06T08:00:00.000Z"
-    }
-  ]
+    "full_name": "Nguyen Van Thang",
+    "username": "thangnv",
+    "gmail": "thang@gmail.com",
+    "password": "12345",
+    "gender": "Male",
+    "dob": "2002-12-10",
+    "phone": "0368286888",
+    "address": "Sóc Sơn - Hà Nội",
+    "role": 1,
+    "createdAt": "2024-03-05T08:00:00.000Z",
+    "updatedAt": "2024-03-05T08:00:00.000Z"
+  },
+  {
+    "full_name": "Nguyen Khac Phong Toan",
+    "userName": "toannpk",
+    "gmail": "toannpk@gmail.com",
+    "password": "12345",
+    "gender": "Male",
+    "dob": "1990-01-01",
+    "phone": 1234567890,
+    "address": "123 Main St, Anytown, USA",
+    "role": 1,
+    "createdAt": "2024-03-06T08:00:00.000Z",
+    "updatedAt": "2024-03-06T08:00:00.000Z"
+  },
+  {
+    "full_name": "Nguyen Van Toan",
+    "userName": "toannv",
+    "gmail": "toannv@gmail.com",
+    "password": "12345",
+    "gender": "Male",
+    "dob": "1995-05-15",
+    "phone": 9876543210,
+    "address": "456 Elm St, Othertown, USA",
+    "role": 1,
+    "createdAt": "2024-03-06T08:00:00.000Z",
+    "updatedAt": "2024-03-06T08:00:00.000Z"
+  }
+]

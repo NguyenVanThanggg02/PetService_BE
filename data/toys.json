@@ -4,13 +4,17 @@
         "quantity": 20,
         "description": "Durable chew bone toy for dogs, helps with dental health and keeps them entertained.",
         "pettype": "Dog",
-        "image": "https://example.com/images/chew_bone_dog.jpg"
+        "image": "https://example.com/images/chew_bone_dog.jpg",
+        "createAt": "2024-05-19T12:00:00Z",
+        "updateAt": "2024-05-19T12:00:00Z"
     },
     {
         "name": "Feather Teaser",
         "quantity": 15,
         "description": "Interactive feather teaser toy for cats, stimulates natural hunting instincts.",
         "pettype": "Cat",
-        "image": "https://example.com/images/feather_teaser_cat.jpg"
+        "image": "https://example.com/images/feather_teaser_cat.jpg",
+        "createAt": "2024-05-19T12:00:00Z",
+        "updateAt": "2024-05-19T12:00:00Z"
     }
 ]

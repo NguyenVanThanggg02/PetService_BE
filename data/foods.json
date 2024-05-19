@@ -4,13 +4,17 @@
         "image": "https://example.com/images/dog_kibble.jpg",
         "quantity": 50,
         "description": "Crunchy dog kibble packed with vitamins and minerals.",
-        "pettype": "Dog"
+        "pettype": "Dog",
+        "createAt": "2024-05-19T12:00:00Z",
+        "updateAt": "2024-05-19T12:00:00Z"
     },
     {
         "name": "Cat Gourmet Tuna",
         "image": "https://example.com/images/cat_gourmet_tuna.jpg",
         "quantity": 30,
         "description": "Delicious gourmet tuna for your feline friend, rich in protein.",
-        "pettype": "Cat"
+        "pettype": "Cat",
+        "createAt": "2024-05-19T12:00:00Z",
+        "updateAt": "2024-05-19T12:00:00Z"
     }
 ]
