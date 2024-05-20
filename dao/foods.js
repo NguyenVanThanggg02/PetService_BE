@@ -9,4 +9,13 @@ const fetchAllFoods = async() =>{
     }
 }
 
-export default {fetchAllFoods}
+const editFood = async(id, foodData) =>{
+try {
+    const editFood = await Food.findOneAndUpdate({_id:id}, foodData,{new:true}).exec()
+    return editFood
+} catch (error) {
+    throw new Error(error.toString())
+}
+}
+
+export default {fetchAllFoods,editFood}

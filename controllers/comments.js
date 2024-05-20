@@ -40,4 +40,19 @@ const updateCmt = async (req, res) => {
     res.status(500).json({ message: error.toString() });
   }
 };
-export default { getAllCommentByPId, removeCommentByPId, updateCmt };
+const addComment = async (req, res) => {
+    try {
+        const {text, petId, toyId, foodId, medicineId, userId} = req.body;
+        const addComment = await commentDao.addComment(text, petId, toyId, foodId, medicineId, userId);
+        if(addComment) {
+            res.status(200).json({ message:'Added comment successfully'});
+        }else{
+            res.status(400).json({message:'not found'})
+        }
+    } catch (error) {
+        res.status(500).json({error:error.toString()})
+    }
+}
+
+
+export default { getAllCommentByPId, removeCommentByPId, updateCmt,addComment };
