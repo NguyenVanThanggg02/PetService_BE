@@ -4,6 +4,8 @@ const foodSchema = new Schema(
   {
     name: {
       type: String,
+      required: [true, "Food name is required"],
+      unique: [true, "Food name is not duplicate"],
     },
     image: [{ type: String }],
     quantity: {
