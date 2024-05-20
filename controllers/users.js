@@ -1,0 +1,12 @@
+import { userDao } from "../dao/index.js"
+
+const getAllUsers = async(req, res) =>{
+    try {
+        const allUsers = await userDao.fetChAllUsers()
+        res.status(200).json(allUsers)
+    } catch (error) {
+        res.status(500).json({error: error.toString()})
+    }
+}
+
+export default{getAllUsers}

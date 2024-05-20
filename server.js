@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import express, { json } from "express";
 
 import connectDB from "./database.js";
+import  { commentRouter, petRouter, userRouter } from "./routes/index.js";
 dotenv.config();
 //Tạo 1 constant 'app'
 const app = express();
@@ -15,7 +16,9 @@ app.use(json());
 app.get('/', (req, res) => {
     res.send("<h1>Welcom to</h1>")
 })
-
+app.get('/comments', commentRouter)
+app.get('/pets', petRouter)
+app.get('/users', userRouter)
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");

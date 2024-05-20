@@ -1,0 +1,56 @@
+[
+  {
+    "_id": {
+      "$oid": "663a459f743f79c9b97fc1e6"
+    },
+    "text": "This is a comment of pet.",
+    "userId": {
+      "$oid": "6639786d743f79c9b97fc1c4"
+    },
+    "petId": {
+      "$oid": "664aa5b802d9be5c43b5e021"
+    },
+    "toyId": {
+      "$oid": ""
+    },
+    "medicineId": {
+      "$oid": ""
+    },
+    "foodId": {
+      "$oid": ""
+    },
+    "createdAt": {
+      "$date": "2024-03-20T19:38:22.884Z"
+    },
+    "updatedAt": {
+      "$date": "2024-03-20T21:53:09.576Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "663a459f743f79c9b97fc1e7"
+    },
+    "text": "This is a comment of pet.",
+    "userId": {
+      "$oid": "664aa8e502d9be5c43b5e02b"
+    },
+    "petId": {
+      "$oid": "664aa5b802d9be5c43b5e021"
+    },
+    "toyId": {
+      "$oid": ""
+    },
+    "medicineId": {
+      "$oid": ""
+    },
+    "foodId": {
+      "$oid": ""
+    },
+    "createdAt": {
+      "$date": "2024-03-21T19:38:22.884Z"
+    },
+    "updatedAt": {
+      "$date": "2024-03-21T21:53:09.576Z"
+    }
+  }
+]
