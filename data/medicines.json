@@ -1,0 +1,35 @@
+[
+    {
+      "name": "Antibiotic A",
+      "images": [
+        "https://example.com/image1.jpg",
+        "https://example.com/image2.jpg"
+      ],
+      "quantity": 100,
+      "description": "An effective antibiotic for bacterial infections.",
+      "pettype": "dog",
+      "createdAt": "2024-05-20T12:34:56.789Z",
+      "updatedAt": "2024-05-20T12:34:56.789Z"
+    },
+    {
+      "name": "Pain Relief B",
+      "images": [
+        "https://example.com/image3.jpg"
+      ],
+      "quantity": 50,
+      "description": "Pain relief medication suitable for cats.",
+      "pettype": "cat",
+      "createdAt": "2024-05-20T13:45:12.345Z",
+      "updatedAt": "2024-05-20T13:45:12.345Z"
+    },
+    {
+      "name": "Vitamin C",
+      "images": [],
+      "quantity": 200,
+      "description": "Vitamin supplement for pets.",
+      "pettype": "all",
+      "createdAt": "2024-05-20T14:56:23.456Z",
+      "updatedAt": "2024-05-20T14:56:23.456Z"
+    }
+  ]
+  
