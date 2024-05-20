@@ -8,5 +8,19 @@ const getAllUsers = async (req, res) => {
     res.status(500).json({ error: error.toString() });
   }
 };
+const updateUser = async (req, res) => {
+  try {
+    res.status(200).json(await userDao.updateUser(req.params.username, req.body));
+    console.log('Edit user successfully');
+  } catch (error) {
+    res.status(500).json({
+      error: error.toString(),
+    });
+    console.log('Edit user failed');
 
-export default { getAllUsers };
+  }
+};
+
+export default { 
+  getAllUsers, 
+  updateUser };
