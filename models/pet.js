@@ -15,10 +15,17 @@ const petSchema = new Schema(
     description: {
       type: String,
     },
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "comments",
+        require: false,
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
-const Pet = mongoose.model("pet", petSchema);
+const Pet = mongoose.model("pets", petSchema);
 export default Pet;
