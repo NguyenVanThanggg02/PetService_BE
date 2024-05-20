@@ -1,12 +1,11 @@
 import User from "../models/user.js"
 
-const fetChAllUsers = async () =>{
+const fetAllUser = async () =>{
     try {
-        const users = await User.find({}).exec()
-        return users
+        return await User.find({}).exec()
     } catch (error) {
         throw new Error(error.toString())
     }
 }
 
-export default {fetChAllUsers}
+export default {fetAllUser}

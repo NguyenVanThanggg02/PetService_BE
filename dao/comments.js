@@ -2,7 +2,8 @@ import Comment from "../models/comment.js";
 
 const fetchCommentByPId = async (id) => {
   try {
-    const allComments = await Comment.find({ petId: id })
+    const allComments = await Comment.find({ $or: [{ petId: id }, { foodId: id }, { toyId: id }, {medicineId:id}] }) 
+    // const allComments = await Comment.find({petId: id}) 
       .populate("userId")
       .exec();
       return allComments;
