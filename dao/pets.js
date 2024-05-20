@@ -8,4 +8,12 @@ const fetchAllPets = async()=>{
         throw new Error(error.toString())
     }
 }
-export default {fetchAllPets}
+const editPet = async(id, petData)=>{
+try {
+    const editPet = await Pet.findOneAndUpdate({_id:id}, petData,{new:true}).exec()
+    return editPet
+} catch (error) {
+ throw new Error(error.toString())   
+}
+}
+export default {fetchAllPets,editPet}
