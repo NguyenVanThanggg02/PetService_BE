@@ -13,18 +13,18 @@ const commentSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "pets",
     },
-    // toyId: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "toys",
-    // },
-    // medicineId: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "medicines",
-    // },
-    // foodId: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "foods",
-    //   },
+    toyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "toys",
+    },
+    medicineId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "medicines",
+    },
+    foodId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "foods",
+      },
   },
   {
     timestamps: true,
