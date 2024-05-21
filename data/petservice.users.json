@@ -2,12 +2,12 @@
   "_id": {
     "$oid": "6639786d743f79c9b97fc1c4"
   },
-  "full_name": "Nguyen Van Thang",
+  "fullname": "Nguyen Van Thang",
   "username": "thangnv",
   "gmail": "thang@gmail.com",
   "password": "12345",
   "gender": "Male",
-  "dob": "2002-12-10",
+  "birthday": "2002-12-10",
   "phone": "0368286888",
   "address": "Sóc Sơn - Hà Nội",
   "role": 1,
@@ -18,12 +18,12 @@
   "_id": {
     "$oid": "664aa8e502d9be5c43b5e02b"
   },
-  "full_name": "Nguyen Khac Phong Toan",
-  "userName": "toannpk",
+  "fullname": "Nguyen Khac Phong Toan",
+  "username": "toannpk",
   "gmail": "toannpk@gmail.com",
   "password": "12345",
   "gender": "Male",
-  "dob": "1990-01-01",
+  "birthday": "1990-01-01",
   "phone": 1234567890,
   "address": "123 Main St, Anytown, USA",
   "role": 1,
@@ -34,12 +34,12 @@
   "_id": {
     "$oid": "664aa8e502d9be5c43b5e02c"
   },
-  "full_name": "Nguyen Van Toan",
-  "userName": "toannv",
+  "fullname": "Nguyen Van Toan",
+  "username": "toannv",
   "gmail": "toannv@gmail.com",
   "password": "12345",
   "gender": "Male",
-  "dob": "1995-05-15",
+  "birthday": "1995-05-15",
   "phone": {
     "$numberLong": "9876543210"
   },
