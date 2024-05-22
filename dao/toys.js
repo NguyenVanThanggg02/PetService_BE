@@ -25,7 +25,7 @@ const deleteToy = async (id) => {
 
 const getLatestToy = async () => {
   try {
-    const latestToy = await Toy.findOne({}).sort({ createdAt: -1 }).exec();
+    const latestToy = await Toy.find({}).sort({ createdAt:-1 }).limit(4).exec();
     return latestToy;
   } catch (error) {
     throw new Error(error.toString());

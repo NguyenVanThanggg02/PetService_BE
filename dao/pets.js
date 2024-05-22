@@ -29,7 +29,7 @@ const deletePet = async (id) => {
 
 const getLatestPet = async () => {
     try {
-        const latestPet = await Pet.find({}).sort({ createdAt: -1 }).limit(1).exec();
+        const latestPet = await Pet.find({}).sort({ createdAt: -1 }).limit(4).exec();
         return latestPet;
     } catch (error) {
         throw new Error(error.toString());

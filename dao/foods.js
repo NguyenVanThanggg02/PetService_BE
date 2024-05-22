@@ -29,7 +29,7 @@ const deleteFood = async (id) => {
 
 const getLatestFood = async () => {
     try {
-        const latestFood = await Food.findOne({}).sort({ createdAt: -1 }).exec();
+        const latestFood = await Food.find({}).sort({ createdAt: -1 }).limit(4).exec();
         return latestFood;
     } catch (error) {
         throw new Error(error.toString());

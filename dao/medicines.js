@@ -20,7 +20,7 @@ const deleteMedicine = async (id) => {
 
 const getLatestMedicines = async () => {
     try {
-        const latestMedicines = await Medicine.find({}).sort({ createdAt: -1 }).limit(1).exec();
+        const latestMedicines = await Medicine.find({}).sort({ createdAt: -1 }).limit(4).exec();
         return latestMedicines;
     } catch (error) {
         throw new Error(error.toString());
