@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import createError from "http-errors";
 import User from "../models/user.js";
 import express from "express";
@@ -58,3 +59,12 @@ usersRouter.post("/login", async (req, res, next) => {
 });
 
 export default usersRouter;
+=======
+import express from 'express';
+import { userController } from '../controllers/index.js';
+const userRouter = express.Router()
+
+userRouter.get('/',userController.getAllUsers)
+
+export default userRouter
+>>>>>>> 98072bd997806fa1de0bb61436844c809b00d865
