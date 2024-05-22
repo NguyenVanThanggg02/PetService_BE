@@ -1,21 +1,38 @@
-import Food from "../models/food.js"
+import Food from "../models/food.js";
 
-const fetchAllFoods = async() =>{
+const fetchAllFoods = async () => {
     try {
-        const allFoods = await Food.find({}).exec()
-        return allFoods
+        const allFoods = await Food.find({}).exec();
+        return allFoods;
     } catch (error) {
-        throw new Error(error.toString())
+        throw new Error(error.toString());
     }
-}
+};
 
-const editFood = async(id, foodData) =>{
-try {
-    const editFood = await Food.findOneAndUpdate({_id:id}, foodData,{new:true}).exec()
-    return editFood
-} catch (error) {
-    throw new Error(error.toString())
-}
-}
+const editFood = async (id, foodData) => {
+    try {
+        const editFood = await Food.findOneAndUpdate({ _id: id }, foodData, { new: true }).exec();
+        return editFood;
+    } catch (error) {
+        throw new Error(error.toString());
+    }
+};
 
-export default {fetchAllFoods,editFood}
+const deleteFood = async (id) => {
+    try {
+        const deletedFood = await Food.findByIdAndDelete(id).exec();
+        return deletedFood;
+    } catch (error) {
+        throw new Error(error.toString());
+    }
+};
+
+const getLatestFood = async () => {
+    try {
+        const latestFood = await Food.findOne({}).sort({ createdAt: -1 }).exec();
+        return latestFood;
+    } catch (error) {
+        throw new Error(error.toString());
+    }
+};
+export default { fetchAllFoods, editFood, deleteFood, getLatestFood };

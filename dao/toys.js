@@ -7,7 +7,29 @@ const editToy = async (id, toyData) => {
     }).exec();
     return editToy;
   } catch (error) {
-    throw new Error({ error: error.toString() });
+    throw new Error(error.toString());
   }
 };
-export default { editToy };
+
+const deleteToy = async (id) => {
+  try {
+    const deletedToy = await Toy.findByIdAndDelete(id).exec();
+    if (!deletedToy) {
+      throw new Error("Toy not found");
+    }
+    return deletedToy;
+  } catch (error) {
+    throw new Error(error.toString());
+  }
+};
+
+const getLatestToy = async () => {
+  try {
+    const latestToy = await Toy.findOne({}).sort({ createdAt: -1 }).exec();
+    return latestToy;
+  } catch (error) {
+    throw new Error(error.toString());
+  }
+};
+
+export default { editToy, deleteToy, getLatestToy };
