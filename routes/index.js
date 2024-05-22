@@ -5,4 +5,11 @@ import foodRouter from "./foods.js";
 import toyRouter from "./toys.js";
 import medicineRouter from "./medicines.js";
 
-export {commentRouter,userRouter,petRouter,foodRouter,toyRouter,medicineRouter}
+export {
+  commentRouter,
+  userRouter,
+  petRouter,
+  foodRouter,
+  toyRouter,
+  medicineRouter,
+};
