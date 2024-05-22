@@ -1,9 +1,16 @@
 import createError from "http-errors";
 import User from "../models/user.js";
 import express from "express";
+import bcrypt from "bcrypt";
+import {
+  signAccessToken,
+  signRefreshToken,
+  verifyRefreshToken,
+  verifyAccessToken,
+} from "../helpers/jwt_helper.js";
+
 const usersRouter = express.Router();
 
-// GET: /users -> Lấy tất cả người dùng
 usersRouter.get("/", async (req, res, next) => {
   try {
     const users = await User.find({}).exec();
@@ -14,8 +21,7 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 
-// GET: /users/:username -> Lấy người dùng theo tên người dùng
-usersRouter.get("/:username", async (req, res, next) => {
+usersRouter.get("/:username", verifyAccessToken, async (req, res, next) => {
   try {
     const username = req.params.username;
     const user = await User.findOne({ username: username }).exec();
@@ -26,7 +32,6 @@ usersRouter.get("/:username", async (req, res, next) => {
   }
 });
 
-// POST: /users/register -> Đăng ký người dùng mới
 usersRouter.post("/register", async (req, res, next) => {
   try {
     const { username, password } = req.body;
@@ -35,23 +40,55 @@ usersRouter.post("/register", async (req, res, next) => {
     }
     const existingUser = await User.findOne({ username: username }).exec();
     if (existingUser) throw createError.Conflict("Người dùng đã tồn tại");
-    const newUser = new User({ username, password });
-    await newUser.save();
-    res.send(newUser);
+    const hashPass = await bcrypt.hash(
+      password,
+      parseInt(process.env.PASSWORD_SECRET)
+    );
+    const newUser = new User({ username, password: hashPass });
+    const savedUser = await newUser.save();
+    const accessToken = await signAccessToken(savedUser._id);
+    res.send({ accessToken, newUser });
   } catch (error) {
     next(error);
   }
 });
-// POST: /users/login -> Người dùng đăng nhập
+
 usersRouter.post("/login", async (req, res, next) => {
-  const { username, password } = req.body;
   try {
-    const user = await User.findOne({ username: username });
-    if (!user) throw createError.BadRequest("Username is not register");
-    if (password !== user.password) {
-      throw createError.BadRequest("Password is incorrect");
+    const { username, password } = req.body;
+    const user = await User.findOne({ username: username }).exec();
+    if (!user) throw createError.NotFound("User not registered");
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      throw createError.Unauthorized("Username or password is incorrect");
+
+    const accessToken = await signAccessToken(user._id);
+    const refreshToken = await signRefreshToken(user._id);
+
+    res
+      .status(200)
+      .json({ username: user.username, accessToken, refreshToken });
+  } catch (error) {
+    next(error);
+  }
+});
+
+usersRouter.delete("/logout", async (req, res, next) => {
+  res.send("Đường dẫn Đăng xuất");
+});
+
+usersRouter.post("/refresh-token", async (req, res, next) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken)
+      throw createError.BadRequest("Refresh token không hợp lệ");
+    const userId = await verifyRefreshToken(refreshToken);
+    if (userId) {
+      const accessToken = await signAccessToken(userId);
+      const newRefreshToken = await signRefreshToken(userId);
+      res.send({ accessToken, refreshToken: newRefreshToken });
     }
-    res.status(200).json(user.username);
   } catch (error) {
     next(error);
   }
