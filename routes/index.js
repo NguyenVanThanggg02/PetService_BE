@@ -4,5 +4,6 @@ import petRouter from "./pets.js";
 import foodRouter from "./foods.js";
 import toyRouter from "./toys.js";
 import medicineRouter from "./medicines.js";
+import blogRouter from "./blogs.js";
 
-export {commentRouter,userRouter,petRouter,foodRouter,toyRouter,medicineRouter}
+export {commentRouter,userRouter,petRouter,foodRouter,toyRouter,medicineRouter, blogRouter}
