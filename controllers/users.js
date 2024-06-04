@@ -1,6 +1,10 @@
 import { userDao } from "../dao/index.js";
 import nodemailer from "nodemailer";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
+
+import bcrypt from "bcrypt";
+import User from "../models/user.js";
+
 const getAllUsers = async (req, res) => {
   try {
     const allUser = await userDao.fetAllUser();
@@ -49,7 +53,16 @@ const forgetPass = async (req, res) => {
   }
 };
 
-export default { getAllUsers, forgetPass };
+const changePass = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(req.body.password, salt);
+const userPassword = await User.findOneAndUpdate({ username: username}, {password: password},{new:true} )
+    res.status(200).json({status:true, data: userPassword});
+  } catch (error) {
 
+  }
+};
 
-
+export default { getAllUsers, forgetPass, changePass };
