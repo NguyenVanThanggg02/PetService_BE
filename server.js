@@ -12,6 +12,8 @@ import {
   petRouter,
   toyRouter,
   userRouter,
+  productsRouter,
+  categoriesRouter,
 } from "./routes/index.js";
 
 dotenv.config();
@@ -32,7 +34,8 @@ app.use("/users", userRouter);
 app.use("/foods", foodRouter);
 app.use("/toys", toyRouter);
 app.use("/medicines", medicineRouter);
-
+app.use("/products", productsRouter);
+app.use("/category", categoriesRouter);
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
