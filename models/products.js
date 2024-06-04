@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+
 const productsSchema = new Schema(
   {
     name: {
@@ -6,7 +7,7 @@ const productsSchema = new Schema(
       required: [true, "Product name is required"],
       unique: [true, "Product name is not duplicate"],
     },
-    image: [{ type: String }],
+    image: { type: String },
     quantity: {
       type: Number,
     },
@@ -28,10 +29,15 @@ const productsSchema = new Schema(
       ref: "category",
       required: true,
     },
+    price: {
+      type: Number,
+    },
   },
   {
     timestamps: true,
   }
 );
+
 const Products = mongoose.model("products", productsSchema);
+
 export default Products;
