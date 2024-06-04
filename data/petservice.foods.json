@@ -1,0 +1,24 @@
+[{
+  "_id": {
+    "$oid": "664eda3f03454afcff0bb080"
+  },
+  "name": "Dog Kibble",
+  "image": "https://www.smurfitkappa.com/-/m/images/spotlight-teaser-image-1250-x-914/pet-food-jpg.jpg?rev=ded9ab4508f948e9aaa04a4a6d12fad5",
+  "quantity": 50,
+  "description": "Crunchy dog kibble packed with vitamins and minerals.",
+  "pettype": "Dog",
+  "createAt": "2024-05-19T12:00:00Z",
+  "updateAt": "2024-05-19T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "664eda3f03454afcff0bb081"
+  },
+  "name": "Cat Gourmet Tuna",
+  "image": "https://www.allaboutfeed.net/app/uploads/2020/12/001_225_IMG_17AAF008_Petfood_Image1-scaled.jpg",
+  "quantity": 30,
+  "description": "Delicious gourmet tuna for your feline friend, rich in protein.",
+  "pettype": "Cat",
+  "createAt": "2024-05-19T12:00:00Z",
+  "updateAt": "2024-05-19T12:00:00Z"
+}]

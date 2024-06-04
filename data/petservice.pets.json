@@ -1,26 +1,38 @@
-[{
-  "_id": {
-    "$oid": "664aa5b802d9be5c43b5e021"
+[
+  {
+    "_id": {
+      "$oid": "664aa5b802d9be5c43b5e021"
+    },
+    "breed": "Golden Retriever",
+    "gender": "Male",
+    "image": [
+      "https://www.vidavetcare.com/wp-content/uploads/sites/234/2022/04/golden-retriever-dog-breed-info.jpeg",
+      "https://www.wagr.ai/cdn/shop/articles/dog-breed-golden-retriever-617659.jpg?v=1687895640",
+      "https://vetericyn.com/Vetericyn/wp-content/uploads/2022/08/golden-retriver-ft-1.jpg",
+      "https://www.pdsa.org.uk/media/7651/golden-retriever-gallery-7.jpg?anchor=center&mode=crop&quality=100&height=500&bgcolor=fff&rnd=133020233890000000"
+    ],
+    "quantity": 10,
+    "description": "Adorable male Golden Retriever puppy, friendly and playful.",
+    "pettype": "Dog",
+    "createAt": "2024-05-19T12:00:00Z",
+    "updateAt": "2024-05-19T12:00:00Z"
   },
-  "breed": "Golden Retriever",
-  "gender": "Male",
-  "image": "https://example.com/images/golden_retriever_male.jpg",
-  "quantity": 10,
-  "description": "Adorable male Golden Retriever puppy, friendly and playful.",
-  "pettype": "Dog",
-  "createAt": "2024-05-19T12:00:00Z",
-  "updateAt": "2024-05-19T12:00:00Z"
-},
-{
-  "_id": {
-    "$oid": "664aa5b802d9be5c43b5e022"
-  },
-  "breed": "Siamese",
-  "gender": "Female",
-  "image": "https://example.com/images/siamese_female.jpg",
-  "quantity": 8,
-  "description": "Beautiful female Siamese cat with striking blue eyes, affectionate and curious.",
-  "pettype": "Cat",
-  "createAt": "2024-05-19T12:00:00Z",
-  "updateAt": "2024-05-19T12:00:00Z"
-}]
+  {
+    "_id": {
+      "$oid": "664aa5b802d9be5c43b5e022"
+    },
+    "breed": "Siamese",
+    "gender": "Female",
+    "image": [
+      "https://www.catster.com/wp-content/uploads/2023/11/Siamese-Cat_Andreas-LischkaPixabay.jpg",
+      "https://adultpaintbynumber.com/wp-content/uploads/2020/09/Siamese-cat-paint-by-numbers.jpg",
+      "https://www.thesprucepets.com/thmb/VOqFexGIOYk1YGjuM2zBuch44us=/1080x0/filters:no_upscale():strip_icc()/37348687_179210919505845_8579658165484781568_n-5b69b1b346e0fb00500b0880.jpg",
+      "https://images.wagwalkingweb.com/media/daily_wag/blog_articles/hero/1678934108.5188236/everything-you-need-to-know-about-siamese-cats.png"
+    ],
+    "quantity": 8,
+    "description": "Beautiful female Siamese cat with striking blue eyes, affectionate and curious.",
+    "pettype": "Cat",
+    "createAt": "2024-05-19T12:00:00Z",
+    "updateAt": "2024-05-19T12:00:00Z"
+  }
+]
