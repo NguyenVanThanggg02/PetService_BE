@@ -15,6 +15,7 @@ import {
   productsRouter,
   categoriesRouter,
 } from "./routes/index.js";
+import searchRouter from "./routes/search.js";
 
 dotenv.config();
 //Tạo 1 constant 'app'
@@ -36,6 +37,9 @@ app.use("/toys", toyRouter);
 app.use("/medicines", medicineRouter);
 app.use("/products", productsRouter);
 app.use("/category", categoriesRouter);
+app.use('/search', searchRouter)
+
+
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
