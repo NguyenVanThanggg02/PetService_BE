@@ -12,6 +12,8 @@ import {
   petRouter,
   toyRouter,
   userRouter,
+  productsRouter,
+  categoriesRouter,
 } from "./routes/index.js";
 import searchRouter from "./routes/search.js";
 
@@ -33,6 +35,8 @@ app.use("/users", userRouter);
 app.use("/foods", foodRouter);
 app.use("/toys", toyRouter);
 app.use("/medicines", medicineRouter);
+app.use("/products", productsRouter);
+app.use("/category", categoriesRouter);
 app.use('/search', searchRouter)
 
 
