@@ -13,6 +13,7 @@ import {
   toyRouter,
   userRouter,
 } from "./routes/index.js";
+import searchRouter from "./routes/search.js";
 
 dotenv.config();
 //Tạo 1 constant 'app'
@@ -32,6 +33,8 @@ app.use("/users", userRouter);
 app.use("/foods", foodRouter);
 app.use("/toys", toyRouter);
 app.use("/medicines", medicineRouter);
+app.use('/search', searchRouter)
+
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
