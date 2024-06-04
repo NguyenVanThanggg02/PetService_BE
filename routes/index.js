@@ -4,7 +4,9 @@ import petRouter from "./pets.js";
 import foodRouter from "./foods.js";
 import toyRouter from "./toys.js";
 import medicineRouter from "./medicines.js";
-
+import categoriesRouter from "./category.js";
+import productsRouter from "./products.js";
+import cartRouter from "./cart.js";
 export {
   commentRouter,
   userRouter,
@@ -12,4 +14,7 @@ export {
   foodRouter,
   toyRouter,
   medicineRouter,
+  categoriesRouter,
+  productsRouter,
+  cartRouter,
 };
