@@ -6,8 +6,7 @@ const fetchCommentByPId = async (id) => {
     const allComments = await Comment.find({
       $or: [{ petId: id }, { foodId: id }, { toyId: id }, { medicineId: id }],
     })
-      // const allComments = await Comment.find({petId: id})
-      // .populate("userId")
+      .populate("userId")
       .exec();
     return allComments;
   } catch (error) {
