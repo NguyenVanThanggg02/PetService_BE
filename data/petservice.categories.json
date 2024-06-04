@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$oid": "665eb88ed618b2e1117e1427"
+  },
+  "name": "Toy",
+  "description": "Items designed for play and entertainment."
+},
+{
+  "_id": {
+    "$oid": "665eb88ed618b2e1117e1428"
+  },
+  "name": "Medicine",
+  "description": "Pharmaceutical products and treatments."
+},
+{
+  "_id": {
+    "$oid": "665eb88ed618b2e1117e1429"
+  },
+  "name": "Dog",
+  "description": "Products and accessories for dogs."
+},
+{
+  "_id": {
+    "$oid": "665eb88ed618b2e1117e142a"
+  },
+  "name": "Cat",
+  "description": "Products and accessories for cats."
+}]

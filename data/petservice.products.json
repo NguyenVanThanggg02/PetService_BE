@@ -1,0 +1,42 @@
+[
+  {
+    "_id": {
+      "$oid": "665eec7890ac8b0be0256ed6"
+    },
+    "name": "Dog Food Premium 2024",
+    "image": "https://th.bing.com/th/id/OIP.BuqrH_U-Kgul2LmnK_8_wwHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+    "quantity": 25,
+    "description": "Premium dog food with full of nutrients, vitamins, and essential minerals to keep your pet healthy and energetic. Special formula with beef, chicken, and vegetables, free from preservatives and artificial additives.",
+    "pettype": "Dog",
+    "category": {
+      "$oid": "665eb88ed618b2e1117e1427"
+    },
+    "price": 1000,
+    "created_at": {
+      "$date": "2024-06-04T00:00:00Z"
+    },
+    "updated_at": {
+      "$date": "2024-06-04T00:00:00Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "665eed1e90ac8b0be0256ed9"
+    },
+    "name": "Dog Treats 2024",
+    "image": "https://th.bing.com/th/id/OIP.BuqrH_U-Kgul2LmnK_8_wwHaHa?w=187&h=187&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+    "quantity": 50,
+    "description": "Chicken flavored treats for dogs, high in protein and low in fat, keeping your dog healthy and satisfied. The product is supplemented with calcium to strengthen bones and brighten teeth.",
+    "pettype": "Dog",
+    "category": {
+      "$oid": "665eb88ed618b2e1117e1427"
+    },
+    "price": 50000,
+    "created_at": {
+      "$date": "2024-06-04T00:00:00Z"
+    },
+    "updated_at": {
+      "$date": "2024-06-04T00:00:00Z"
+    }
+  }
+]
