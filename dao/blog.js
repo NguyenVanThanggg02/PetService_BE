@@ -2,7 +2,7 @@ import Blog from "../models/blog.js";
 
 const fetchAllBlogs = async () => {
   try {
-    const blogs = await Blog.find().exec();
+    const blogs = await Blog.find().populate('userId').exec();
     return blogs;
   } catch (error) {
     throw new Error(error.toString());
@@ -12,6 +12,8 @@ const fetchAllBlogs = async () => {
 const editBlogById = async (id, updatedContent) => {
     try {
       const updatedBlog = await Blog.findOneAndUpdate({ _id: id }, updatedContent, { new: true, runValidators: true }).exec();
+      console.log("Updated Blog:", updatedBlog);
+
       return updatedBlog;
     } catch (error) {
       throw new Error(error.toString());

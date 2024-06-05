@@ -15,6 +15,7 @@ const getAllBlogs = async (req, res) => {
 
 const updateBlog = async (req, res) => {
   try {
+    
     const updatedBlog = await blogDao.editBlogById(req.params.id, req.body);
       res.status(200).json( updatedBlog );
   } catch (error) {

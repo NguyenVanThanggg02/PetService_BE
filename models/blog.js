@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import mongoose,{ Schema } from "mongoose";
 
 const blogSchema = new Schema({
     content: {
@@ -17,12 +17,10 @@ const blogSchema = new Schema({
             required: false,
         },
     ],
-    likes: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "users"  // Giả sử bạn có model User để quản lý thông tin người dùng
-        }
-    ],
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
     createdAt: {
         type: Date,
         default: Date.now
@@ -36,6 +34,6 @@ const blogSchema = new Schema({
 });
 
 // Tạo model sử dụng schema
-const Blog = model("blogs", blogSchema);
+const Blog =mongoose.model("blogs", blogSchema);
 
 export default Blog;
