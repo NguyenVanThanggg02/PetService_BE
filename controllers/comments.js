@@ -42,8 +42,8 @@ const updateCmt = async (req, res) => {
 };
 const addComment = async (req, res) => {
     try {
-        const {text, petId, toyId, foodId, medicineId, userId} = req.body;
-        const addComment = await commentDao.addComment(text, petId, toyId, foodId, medicineId, userId);
+        const {text, petId, toyId, foodId, medicineId, userId, productId} = req.body;
+        const addComment = await commentDao.addComment(text, petId, toyId, foodId, medicineId, userId, productId);
         if(addComment) {
             res.status(200).json({ message:'Added comment successfully'});
         }else{

@@ -1,6 +1,4 @@
 
-
-
 import createError from "http-errors";
 import User from "../models/user.js";
 import express from "express";
@@ -12,7 +10,7 @@ import {
   verifyAccessToken,
 } from "../helpers/jwt_helper.js";
 import { userController } from "../controllers/index.js";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 const usersRouter = express.Router();
 usersRouter.get('/',userController.getAllUsers)
@@ -40,31 +38,8 @@ usersRouter.post("/reset-password/:id/:token", (req, res) => {
   });
 });
 
-
-
-// usersRouter.put('/:username', (req, res) => {
-//   const { username } = req.params;
-//   const { oldPassword, newPassword } = req.body;
-//   const user = User.find(user => user.username === username);
-
-//   if (!user) {
-//     return res.status(404).send('User not found');
-//   }
-
-//   // Assume the stored password is hashed
-//   const isOldPasswordValid = bcrypt.compareSync(oldPassword, user.password);
-
-//   if (!isOldPasswordValid) {
-//     return res.status(400).send('Old password is incorrect');
-//   }
-
-//   // Hash the new password before saving
-//   user.password = bcrypt.hashSync(newPassword, 10);
-//   res.status(200).send('Password updated successfully');
-// });
-
-
-
+// change password
+usersRouter.put("/:username", userController.changePass);
 
 usersRouter.get("/", async (req, res, next) => {
   try {
@@ -123,7 +98,13 @@ usersRouter.post("/login", async (req, res, next) => {
 
     res
       .status(200)
-      .json({ username: user.username, accessToken, refreshToken, password: user.password, id: user._id});
+      .json({
+        username: user.username,
+        accessToken,
+        refreshToken,
+        password: user.password,
+        id: user._id,
+      });
   } catch (error) {
     next(error);
   }

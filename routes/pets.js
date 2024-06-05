@@ -7,4 +7,6 @@ petRouter.get('/', petController.getAllPets);
 petRouter.put('/:id', petController.updatePet);
 petRouter.delete('/:id', petController.deletePet);
 petRouter.get('/latest', petController.getLatestPet);
-export default petRouter;
+petRouter.get('/:pettype', petController.fetchPetByPetType)
+petRouter.post('/', petController.createPet)
+export default petRouter

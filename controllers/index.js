@@ -6,4 +6,5 @@ import toyController from "./toys.js";
 import medicineController from "./medicines.js";
 import blogController from "./blog.js"
 
-export { commentsController, petController, userController,foodController,toyController,medicineController, blogController };
+import productController from "./products.js";
+export { commentsController, petController, userController,foodController,toyController,medicineController, productController, blogController };
