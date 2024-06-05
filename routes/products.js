@@ -1,8 +1,13 @@
 import express from "express";
 import createError from "http-errors";
 import Products from "../models/products.js";
+import { productController } from "../controllers/index.js";
 
 const productsRouter = express.Router();
+
+
+productsRouter.get('/last', productController.getLatestProducts)
+
 
 // Get all products
 productsRouter.get("/", async (req, res, next) => {

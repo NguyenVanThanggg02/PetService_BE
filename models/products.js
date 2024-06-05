@@ -7,7 +7,7 @@ const productsSchema = new Schema(
       required: [true, "Product name is required"],
       unique: [true, "Product name is not duplicate"],
     },
-    image: { type: String },
+    image: [{ type: String }],
     quantity: {
       type: Number,
     },
