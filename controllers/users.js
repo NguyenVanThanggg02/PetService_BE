@@ -58,11 +58,13 @@ const changePass = async (req, res) => {
     const { username } = req.params;
     const salt = await bcrypt.genSalt(10);
     const password = await bcrypt.hash(req.body.password, salt);
-const userPassword = await User.findOneAndUpdate({ username: username}, {password: password},{new:true} )
-    res.status(200).json({status:true, data: userPassword});
-  } catch (error) {
-
-  }
+    const userPassword = await User.findOneAndUpdate(
+      { username: username },
+      { password: password },
+      { new: true }
+    );
+    res.status(200).json({ status: true, data: userPassword });
+  } catch (error) {}
 };
 
 export default { getAllUsers, forgetPass, changePass };

@@ -4,7 +4,8 @@ import userDao from "./users.js";
 import foodDao from "./foods.js";
 import toyDao from "./toys.js";
 import medicineDao from "./medicines.js";
+import productDao from './products.js'
 
 
 
-export {commentDao,petDao,userDao,foodDao,toyDao,medicineDao}
+export {commentDao,petDao,userDao,foodDao,toyDao,medicineDao, productDao}
