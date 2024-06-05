@@ -17,10 +17,32 @@ const editToy = async (id, toyData) => {
     }).exec();
     return editToy;
   } catch (error) {
-    throw new Error({ error: error.toString() });
+    throw new Error(error.toString());
   }
 };
 
+const deleteToy = async (id) => {
+  try {
+    const deletedToy = await Toy.findByIdAndDelete(id).exec();
+    if (!deletedToy) {
+      throw new Error("Toy not found");
+    }
+    return deletedToy;
+  } catch (error) {
+    throw new Error(error.toString());
+  }
+};
+
+const getLatestToy = async () => {
+  try {
+    const latestToy = await Toy.find({}).sort({ createdAt:-1 }).limit(4).exec();
+    return latestToy;
+  } catch (error) {
+    throw new Error(error.toString());
+  }
+};
+    
+    
 
 const createPet = async ({ name, quantity, description, pettype, image }) => {
   try {
@@ -46,5 +68,5 @@ export default
     fetchAllToy,
     editToy,
     createPet,
-    getToyByPetType
+    getToyByPetType, getLatestToy, deleteToy
   };

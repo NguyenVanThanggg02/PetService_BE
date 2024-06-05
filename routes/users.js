@@ -1,3 +1,4 @@
+
 import createError from "http-errors";
 import User from "../models/user.js";
 import express from "express";
@@ -12,6 +13,8 @@ import { userController } from "../controllers/index.js";
 import jwt from "jsonwebtoken";
 
 const usersRouter = express.Router();
+usersRouter.get('/',userController.getAllUsers)
+usersRouter.put('/:username',userController.updateUser)
 
 usersRouter.post("/forgot-password", userController.forgetPass);
 

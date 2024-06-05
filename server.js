@@ -5,7 +5,9 @@ import express, { json } from "express";
 
 import connectDB from "./database.js";
 
+
 import {
+  blogRouter,
   commentRouter,
   foodRouter,
   medicineRouter,
@@ -38,6 +40,7 @@ app.use("/medicines", medicineRouter);
 app.use("/products", productsRouter);
 app.use("/category", categoriesRouter);
 app.use('/search', searchRouter)
+app.use('/blogs', blogRouter)
 
 
 app.use(function (req, res, next) {
