@@ -29,7 +29,6 @@ const getLatestPet = async () => {
     }
 };
 
-}
 const editPet = async (id, petData) => {
     try {
         const editPet = await Pet.findOneAndUpdate({ _id: id }, petData, { new: true }).exec()

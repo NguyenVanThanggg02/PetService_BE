@@ -43,7 +43,7 @@ const getLatestMedicines = async (req, res) => {
     }
 };
 
-}
+
 
 
 
