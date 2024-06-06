@@ -1,3 +1,5 @@
+
+
 import createError from "http-errors";
 import User from "../models/user.js";
 import express from "express";
@@ -8,8 +10,58 @@ import {
   verifyRefreshToken,
   verifyAccessToken,
 } from "../helpers/jwt_helper.js";
+import { userController } from "../controllers/index.js";
+import jwt from 'jsonwebtoken';
 
 const usersRouter = express.Router();
+
+usersRouter.post("/forgot-password", userController.forgetPass);
+
+usersRouter.post("/reset-password/:id/:token", (req, res) => {
+  const { id, token } = req.params;
+  const { password } = req.body;
+
+  jwt.verify(token, "jwt_secret_key", (err, decoded) => {
+    if (err) {
+      return res.json({ Status: "Error with token" });
+    } else {
+      bcrypt
+        .hash(password, 10)
+        .then((hash) => {
+          User.findByIdAndUpdate({ _id: id }, { password: hash })
+            .then((u) => res.send({ Status: "Success" }))
+            .catch((err) => res.send({ Status: err }));
+        })
+        .catch((err) => res.send({ Status: err }));
+    }
+  });
+});
+
+
+
+// usersRouter.put('/:username', (req, res) => {
+//   const { username } = req.params;
+//   const { oldPassword, newPassword } = req.body;
+//   const user = User.find(user => user.username === username);
+
+//   if (!user) {
+//     return res.status(404).send('User not found');
+//   }
+
+//   // Assume the stored password is hashed
+//   const isOldPasswordValid = bcrypt.compareSync(oldPassword, user.password);
+
+//   if (!isOldPasswordValid) {
+//     return res.status(400).send('Old password is incorrect');
+//   }
+
+//   // Hash the new password before saving
+//   user.password = bcrypt.hashSync(newPassword, 10);
+//   res.status(200).send('Password updated successfully');
+// });
+
+
+
 
 usersRouter.get("/", async (req, res, next) => {
   try {
@@ -68,7 +120,7 @@ usersRouter.post("/login", async (req, res, next) => {
 
     res
       .status(200)
-      .json({ username: user.username, accessToken, refreshToken });
+      .json({ username: user.username, accessToken, refreshToken, password: user.password, id: user._id});
   } catch (error) {
     next(error);
   }

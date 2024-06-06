@@ -1,3 +1,7 @@
+
+
+
+
 import User from "../models/user.js"
 
 const fetAllUser = async () =>{
@@ -8,4 +12,12 @@ const fetAllUser = async () =>{
     }
 }
 
-export default {fetAllUser}
+const forgotPass = async (gmail) => {
+    try {
+      return await User.findOne({ gmail: gmail }).exec();
+    } catch (error) {
+      throw new Error(error.toString());
+    }
+  };
+export default {fetAllUser, forgotPass}
+
