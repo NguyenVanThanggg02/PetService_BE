@@ -15,6 +15,7 @@ import jwt from "jsonwebtoken";
 const usersRouter = express.Router();
 usersRouter.get('/',userController.getAllUsers)
 usersRouter.put('/:username',userController.updateUser)
+usersRouter.get("/:username", userController.getUserByUserName);
 
 usersRouter.post("/forgot-password", userController.forgetPass);
 
@@ -51,16 +52,16 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 
-usersRouter.get("/:username", verifyAccessToken, async (req, res, next) => {
-  try {
-    const username = req.params.username;
-    const user = await User.findOne({ username: username }).exec();
-    if (!user) throw createError(404, `Người dùng ${username} không tồn tại`);
-    res.send(user);
-  } catch (error) {
-    next(error);
-  }
-});
+// usersRouter.get("/:username", verifyAccessToken, async (req, res, next) => {
+//   try {
+//     const username = req.params.username;
+//     const user = await User.findOne({ username: username }).exec();
+//     if (!user) throw createError(404, `Người dùng ${username} không tồn tại`);
+//     res.send(user);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 usersRouter.post("/register", async (req, res, next) => {
   try {
@@ -105,6 +106,7 @@ usersRouter.post("/login", async (req, res, next) => {
         password: user.password,
         id: user._id,
         fullname: user.fullname,
+        role: user.role,
       });
   } catch (error) {
     next(error);

@@ -25,7 +25,14 @@ const updateUser = async (req, res) => {
 
   }
 };
-
+const getUserByUserName = async (req, res) => {
+  try {
+    const username = await userDao.fetchUserByUsername(req.params.username);
+    res.status(200).json(username);
+  } catch (error) {
+    res.status(500).json({ error: error.toString() });
+  }
+};
 
 
 const forgetPass = async (req, res) => {
@@ -82,4 +89,4 @@ const changePass = async (req, res) => {
   } catch (error) {}
 };
 
-export default { getAllUsers, forgetPass, changePass, updateUser };
+export default { getAllUsers, forgetPass, changePass, updateUser, getUserByUserName };
