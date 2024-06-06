@@ -11,10 +11,9 @@ import {
 } from "../helpers/jwt_helper.js";
 import { userController } from "../controllers/index.js";
 import jwt from "jsonwebtoken";
-
 const usersRouter = express.Router();
-usersRouter.get('/',userController.getAllUsers)
-usersRouter.put('/:username',userController.updateUser)
+usersRouter.get('/', userController.getAllUsers)
+usersRouter.put('/:username', userController.updateUser)
 
 usersRouter.post("/forgot-password", userController.forgetPass);
 
@@ -129,5 +128,5 @@ usersRouter.post("/refresh-token", async (req, res, next) => {
     next(error);
   }
 });
-
+usersRouter.get("/users/:username", verifyAccessToken, userController.getUserByUsername);
 export default usersRouter;
