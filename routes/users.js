@@ -104,6 +104,7 @@ usersRouter.post("/login", async (req, res, next) => {
         refreshToken,
         password: user.password,
         id: user._id,
+        fullname: user.fullname,
       });
   } catch (error) {
     next(error);

@@ -11,5 +11,13 @@ const fetchLatestProduct = async () => {
       throw new Error(error.toString());
     }
   };
+  const updateProduct = async (id, productData) => {
+    try {
+        const editProduct = await Products.findOneAndUpdate({ _id: id }, productData, { new: true }).exec()
+        return editProduct
+    } catch (error) {
+        throw new Error(error.toString())
+    }
+}
 
-  export default {fetchLatestProduct}
+  export default {fetchLatestProduct, updateProduct}
