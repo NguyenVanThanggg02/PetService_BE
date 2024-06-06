@@ -16,7 +16,8 @@ const usersRouter = express.Router();
 usersRouter.get('/',userController.getAllUsers)
 usersRouter.put('/:username',userController.updateUser)
 usersRouter.get("/:username", userController.getUserByUserName);
-
+// change password
+usersRouter.put("/changepass/:username", userController.changePass);
 usersRouter.post("/forgot-password", userController.forgetPass);
 
 usersRouter.post("/reset-password/:id/:token", (req, res) => {
@@ -39,8 +40,7 @@ usersRouter.post("/reset-password/:id/:token", (req, res) => {
   });
 });
 
-// change password
-usersRouter.put("/:username", userController.changePass);
+
 
 usersRouter.get("/", async (req, res, next) => {
   try {

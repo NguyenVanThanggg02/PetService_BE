@@ -15,14 +15,15 @@ const getAllUsers = async (req, res) => {
 };
 const updateUser = async (req, res) => {
   try {
-    res.status(200).json(await userDao.updateUser(req.params.username, req.body));
-    console.log('Edit user successfully');
+    res
+      .status(200)
+      .json(await userDao.updateUser(req.params.username, req.body));
+    console.log("Edit user successfully");
   } catch (error) {
     res.status(500).json({
       error: error.toString(),
     });
-    console.log('Edit user failed');
-
+    console.log("Edit user failed");
   }
 };
 const getUserByUserName = async (req, res) => {
@@ -33,7 +34,6 @@ const getUserByUserName = async (req, res) => {
     res.status(500).json({ error: error.toString() });
   }
 };
-
 
 const forgetPass = async (req, res) => {
   const { gmail } = req.body;
@@ -74,7 +74,6 @@ const forgetPass = async (req, res) => {
   }
 };
 
-
 const changePass = async (req, res) => {
   try {
     const { username } = req.params;
@@ -88,5 +87,10 @@ const changePass = async (req, res) => {
     res.status(200).json({ status: true, data: userPassword });
   } catch (error) {}
 };
-
-export default { getAllUsers, forgetPass, changePass, updateUser, getUserByUserName };
+export default {
+  getAllUsers,
+  forgetPass,
+  changePass,
+  updateUser,
+  getUserByUserName,
+};
