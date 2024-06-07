@@ -40,5 +40,85 @@
     "updated_at": {
       "$date": "2024-06-04T00:00:00Z"
     }
+  },
+  {
+    "name": "Cat Toy Feather Wand 2024",
+    "image": [
+      "https://example.com/cat-toy-feather-wand1.jpg",
+      "https://example.com/cat-toy-feather-wand2.jpg"
+    ],
+    "quantity": 100,
+    "description": "Interactive feather wand toy for cats, perfect for encouraging play and exercise. Made with safe and durable materials.",
+    "pettype": "Cat",
+    "category": {
+      "$oid": "665eb88ed618b2e1117e1427"
+    },
+    "price": 1500,
+    "created_at": {
+      "$date": "2024-06-01T00:00:00Z"
+    },
+    "updated_at": {
+      "$date": "2024-06-01T00:00:00Z"
+    }
+  },
+  {
+    "name": "Dog Flea & Tick Medicine 2024",
+    "image": [
+      "https://example.com/dog-flea-tick-medicine1.jpg",
+      "https://example.com/dog-flea-tick-medicine2.jpg"
+    ],
+    "quantity": 50,
+    "description": "Effective treatment for fleas and ticks, specially formulated for dogs. Fast-acting and long-lasting protection.",
+    "pettype": "Dog",
+    "category": {
+      "$oid": "665eb88ed618b2e1117e1428"
+    },
+    "price": 3000,
+    "created_at": {
+      "$date": "2024-06-01T00:00:00Z"
+    },
+    "updated_at": {
+      "$date": "2024-06-01T00:00:00Z"
+    }
+  },
+  {
+    "name": "Dog Leash 2024",
+    "image": [
+      "https://example.com/dog-leash1.jpg",
+      "https://example.com/dog-leash2.jpg"
+    ],
+    "quantity": 200,
+    "description": "Durable and adjustable leash for dogs, made with high-quality materials. Ensures safety and comfort during walks.",
+    "pettype": "Dog",
+    "category": {
+      "$oid": "665eb88ed618b2e1117e1429"
+    },
+    "price": 2500,
+    "created_at": {
+      "$date": "2024-06-01T00:00:00Z"
+    },
+    "updated_at": {
+      "$date": "2024-06-01T00:00:00Z"
+    }
+  },
+  {
+    "name": "Cat Food Deluxe 2024",
+    "image": [
+      "https://example.com/cat-food-deluxe1.jpg",
+      "https://example.com/cat-food-deluxe2.jpg"
+    ],
+    "quantity": 75,
+    "description": "High-quality cat food with essential nutrients and vitamins. Supports overall health and well-being of your cat.",
+    "pettype": "Cat",
+    "category": {
+      "$oid": "665eb88ed618b2e1117e142a"
+    },
+    "price": 3500,
+    "created_at": {
+      "$date": "2024-06-01T00:00:00Z"
+    },
+    "updated_at": {
+      "$date": "2024-06-01T00:00:00Z"
+    }
   }
 ]

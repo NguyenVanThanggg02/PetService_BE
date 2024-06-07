@@ -10,4 +10,30 @@ const getLatestProducts = async (req, res) => {
     }
   };
 
-  export default {getLatestProducts}
+  
+const fetchProductsByCategory = async (req, res) => {
+  try {
+    const productsByCategory = await productDao.fetchProductByCategory(req.params.cateId);
+    res.status(200).json(productsByCategory);
+  } catch (error) {
+    res.status(500).json({
+      error: error.toString(),
+    });
+  }
+};
+
+
+const fetchProductsByPetType = async (req, res) => {
+  try {
+    const petByPetType = await productDao.getProductsByPetType(req.params.pettype);
+    res.status(200).json(petByPetType);
+  } catch (error) {
+    res.status(500).json({
+      error: error.toString(),
+    });
+  }
+};
+
+
+
+  export default {getLatestProducts,fetchProductsByCategory,fetchProductsByPetType}

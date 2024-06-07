@@ -7,6 +7,9 @@ const productsRouter = express.Router();
 
 
 productsRouter.get('/last', productController.getLatestProducts)
+productsRouter.get('/filter/:cateId', productController.fetchProductsByCategory)
+productsRouter.get('/pettype/:pettype', productController.fetchProductsByPetType)
+
 
 
 // Get all products
@@ -80,5 +83,21 @@ productsRouter.get("/new", async (req, res, next) => {
     next(error);
   }
 });
+
+
+productsRouter.get('/search/:name', async (req, res, next) => {
+  try {
+    const name = req.params.name
+    const rgx = (pattern) => new RegExp(`.*${pattern}.*`);
+    const searchRgx = rgx(name);
+
+    const searchResult = await Products.find({ name: { $regex: searchRgx, $options: "i" } }).populate("category")
+    res.send(searchResult)
+  } catch (error) {
+    throw new Error(error.toString());
+
+  }
+})
+
 
 export default productsRouter;
