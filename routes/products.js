@@ -7,10 +7,7 @@ const productsRouter = express.Router();
 
 productsRouter.get("/last", productController.getLatestProducts);
 productsRouter.put("/:id", productController.updateProduct);
-<<<<<<< HEAD
-=======
 
->>>>>>> c04e58b040cf99db389d5ad1ececf4fd9747288f
 // Get all products
 productsRouter.get("/", async (req, res, next) => {
   try {
