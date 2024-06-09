@@ -65,8 +65,8 @@ usersRouter.get("/", async (req, res, next) => {
 
 usersRouter.post("/register", async (req, res, next) => {
   try {
-    const { username, password } = req.body;
-    if (!username || !password) {
+    const { username, password , fullname} = req.body;
+    if (!username || !password || !fullname) {
       throw createError.BadRequest("Yêu cầu nhập tên người dùng và mật khẩu");
     }
     const existingUser = await User.findOne({ username: username }).exec();
@@ -75,7 +75,7 @@ usersRouter.post("/register", async (req, res, next) => {
       password,
       parseInt(process.env.PASSWORD_SECRET)
     );
-    const newUser = new User({ username, password: hashPass });
+    const newUser = new User({fullname, username, password: hashPass });
     const savedUser = await newUser.save();
     const accessToken = await signAccessToken(savedUser._id);
     res.send({ accessToken, newUser });
