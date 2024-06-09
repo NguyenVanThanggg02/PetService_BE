@@ -29,6 +29,14 @@ const fetchListCartOfUser = async (id) => {
     }
   };
 
+  const updateCart = async (id, Uquantity) =>{
+    try {
+        const updateCartItem = await Cart.findOneAndUpdate({ _id: id}, Uquantity, {new:true}) ;
+        return updateCartItem;
+    } catch (error) {
+      throw new Error(error.toString());
+      
+    }
+  }
 
-
-  export default {fetchListCartOfUser, removeListCartOfUser, addProductToCart}
+  export default {fetchListCartOfUser, removeListCartOfUser, addProductToCart, updateCart}

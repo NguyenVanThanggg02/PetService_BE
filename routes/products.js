@@ -6,6 +6,7 @@ import { productController } from "../controllers/index.js";
 const productsRouter = express.Router();
 
 productsRouter.get("/last", productController.getLatestProducts);
+productsRouter.put("/:id", productController.updateProduct);
 
 // Get all products
 productsRouter.get("/", async (req, res, next) => {
@@ -79,7 +80,6 @@ productsRouter.get("/new", async (req, res, next) => {
   }
 });
 
-productsRouter.put("/:id", productController.updateProduct);
 
 
 
