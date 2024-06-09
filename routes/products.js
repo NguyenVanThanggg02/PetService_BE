@@ -79,7 +79,6 @@ productsRouter.get("/new", async (req, res, next) => {
   }
 });
 
-productsRouter.put("/:id", productController.updateProduct);
 
 
 
