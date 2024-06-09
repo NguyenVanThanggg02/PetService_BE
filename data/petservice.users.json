@@ -4,15 +4,17 @@
   },
   "fullname": "Nguyen Van Thang",
   "username": "thangnv",
-  "gmail": "thang@gmail.com",
-  "password": "12345",
+  "gmail": "thang2k210@gmail.com",
+  "password": "$2b$10$7vF54QkF6KjtkuffbjpZHeNwkFjeLJD7ZtEYk7LSLBn0ZFB/7x4lu",
   "gender": "Male",
   "birthday": "2002-12-10",
   "phone": "0368286888",
   "address": "Sóc Sơn - Hà Nội",
   "role": 1,
   "createdAt": "2024-03-05T08:00:00.000Z",
-  "updatedAt": "2024-03-05T08:00:00.000Z"
+  "updatedAt": {
+    "$date": "2024-06-06T14:55:42.809Z"
+  }
 },
 {
   "_id": {
@@ -20,15 +22,17 @@
   },
   "fullname": "Nguyen Khac Phong Toan",
   "username": "toannpk",
-  "gmail": "toannpk@gmail.com",
-  "password": "12345",
+  "gmail": "vanthangdev@gmail.com",
+  "password": "$2b$10$/MidnAV18ZKKu7g2gnWJKeLCMagbxmdaADYP5KoDJoXYmUmFW8STC",
   "gender": "Male",
   "birthday": "1990-01-01",
   "phone": 1234567890,
   "address": "123 Main St, Anytown, USA",
-  "role": 1,
+  "role": 0,
   "createdAt": "2024-03-06T08:00:00.000Z",
-  "updatedAt": "2024-03-06T08:00:00.000Z"
+  "updatedAt": {
+    "$date": "2024-06-06T15:24:35.778Z"
+  }
 },
 {
   "_id": {
@@ -47,4 +51,25 @@
   "role": 1,
   "createdAt": "2024-03-06T08:00:00.000Z",
   "updatedAt": "2024-03-06T08:00:00.000Z"
+},
+{
+  "_id": {
+    "$oid": "665dd5f8e5abc1372cff840c"
+  },
+  "fullname": "",
+  "username": "abc",
+  "gmail": "",
+  "password": "$2b$10$Ejzlhz9bTX2bwLrL0G3Xn.ovfHHvm1OVNkRkJYx/JR1BNFQo/jevS",
+  "gender": "",
+  "birthday": "",
+  "phone": "",
+  "address": "",
+  "role": 0,
+  "createdAt": {
+    "$date": "2024-06-03T14:40:56.857Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-03T14:40:56.857Z"
+  },
+  "__v": 0
 }]

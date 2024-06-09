@@ -36,4 +36,13 @@ const addProductToCart = async (req, res) => {
     res.status(500).json({ message: error.toString() });
   }
 };
-export default { getListCartOfUser, deleteListCartOfUser, addProductToCart };
+const updateCart = async (req, res) => {
+  try {
+    const updateCartItem = await cartDao.updateCart(req.params.id,req.body)
+    res.status(200).json(updateCartItem);
+  } catch (error) {
+    res.status(500).json({ error: error.toString() });
+    
+  }
+}
+export default { getListCartOfUser, deleteListCartOfUser, addProductToCart, updateCart };
