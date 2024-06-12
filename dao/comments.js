@@ -3,16 +3,17 @@ import Comment from "../models/comment.js";
 
 const fetchCommentByPId = async (id) => {
   try {
-    // const allComments = await Comment.find({
-    //   $or: [
-    //     { petId: id },
-    //     { foodId: id },
-    //     { toyId: id },
-    //     { medicineId: id },
-    //     { productId: id },
-    //   ],
-    // })
-    const allComments = await Comment.find({productId:id})
+    const allComments = await Comment.find({ productId: id})
+      .populate("userId")
+      .exec();
+    return allComments;
+  } catch (error) {
+    throw new Error(error.toString());
+  }
+};
+const fetchCommentByBId = async (bid) => {
+  try {
+    const allComments = await Comment.find({ blogId: bid})
       .populate("userId")
       .exec();
     return allComments;
@@ -41,22 +42,16 @@ const editCommentByPId = async (id, newText) => {
 
 const addComment = async (
   text,
-  // petId,
-  // toyId,
-  // foodId,
-  // medicineId,
   userId,
-  productId
+  productId,
+  blogId
 ) => {
   try {
     const addComment = await Comment.create({
       text,
-      // petId,
-      // toyId,
-      // foodId,
-      // medicineId,
       userId,
       productId,
+      blogId,
     });
     return addComment;
   } catch (error) {
@@ -69,4 +64,5 @@ export default {
   deleteCommentByPId,
   editCommentByPId,
   addComment,
+  fetchCommentByBId
 };

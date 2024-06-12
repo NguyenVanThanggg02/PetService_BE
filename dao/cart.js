@@ -10,9 +10,9 @@ const fetchListCartOfUser = async (id) => {
       throw new Error(error.toString());
     }
   };
-  const removeListCartOfUser = async (id) => {
+  const removeListCartOfUser = async (productId) => {
       try {
-          const cart = await Cart.deleteOne({ _id: id }).exec();
+          const cart = await Cart.deleteOne({ _id: productId }).exec();
           return cart;
       } catch (error) {
       throw new Error(error.toString());
