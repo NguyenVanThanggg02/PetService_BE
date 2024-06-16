@@ -20,4 +20,13 @@ const fetchLatestProduct = async () => {
     }
 }
 
-  export default {fetchLatestProduct, updateProduct}
+const deleteProduct = async (id) => {
+  try {
+      const deleteProduct = await Products.findByIdAndDelete(id).exec();
+      return deleteProduct;
+  } catch (error) {
+      throw new Error(error.toString());
+  }
+};
+
+  export default {fetchLatestProduct, updateProduct, deleteProduct}

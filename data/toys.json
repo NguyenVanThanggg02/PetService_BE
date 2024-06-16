@@ -16,5 +16,25 @@
         "image": "https://example.com/images/feather_teaser_cat.jpg",
         "createdAt": "2024-05-19T12:00:00Z",
         "updateAt": "2024-05-19T12:00:00Z"
-    }
-]
+    },
+
+        {
+            "name": "Squeaky Ball",
+            "quantity": 10,
+            "description": "Squeaky ball toy for dogs, great for fetching and playing outdoors.",
+            "pettype": "Dog",
+            "image": "https://example.com/images/squeaky_ball_dog.jpg",
+            "createdAt": "2024-05-19T12:00:00Z",
+            "updateAt": "2024-05-19T12:00:00Z"
+        },
+        {
+            "name": "Catnip Mouse",
+            "quantity": 12,
+            "description": "Catnip-filled mouse toy for cats, encourages play and exercise.",
+            "pettype": "Cat",
+            "image": "https://example.com/images/catnip_mouse_cat.jpg",
+            "createdAt": "2024-05-19T12:00:00Z",
+            "updateAt": "2024-05-19T12:00:00Z"
+        }
+    ]
+    
