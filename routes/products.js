@@ -7,6 +7,7 @@ const productsRouter = express.Router();
 
 productsRouter.get("/last", productController.getLatestProducts);
 productsRouter.put("/:id", productController.updateProduct);
+productsRouter.delete("/:id", productController.deleteProduct); 
 
 // Get all products
 productsRouter.get("/", async (req, res, next) => {

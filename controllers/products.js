@@ -24,4 +24,15 @@ const updateProduct = async (req, res) => {
   }
 };
 
-export default { getLatestProducts, updateProduct };
+const deleteProduct = async (req, res) => {
+  try {
+    const deleteProduct = await productDao.deleteProduct(req.params.id);
+    res.status(200).json(deleteProduct);
+    console.log('Deleted products successfully');
+  } catch (error) {
+    res.status(500).json({ error: error.toString() });
+    console.log('Failed to delete product');
+  }
+};
+
+export default { getLatestProducts, updateProduct , deleteProduct };
