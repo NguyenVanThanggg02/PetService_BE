@@ -28,6 +28,10 @@ const commentSchema = new Schema(
     productId:{
       type: mongoose.Schema.Types.ObjectId,
       ref: "products",
+    }, 
+    blogId:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "blogs",
     }
   },
   {

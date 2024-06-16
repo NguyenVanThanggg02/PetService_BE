@@ -1,4 +1,4 @@
-import {blogDao} from "../dao/index.js";
+import { blogDao } from "../dao/index.js";
 
 const getAllBlogs = async (req, res) => {
   try {
@@ -15,9 +15,8 @@ const getAllBlogs = async (req, res) => {
 
 const updateBlog = async (req, res) => {
   try {
-    
     const updatedBlog = await blogDao.editBlogById(req.params.id, req.body);
-      res.status(200).json( updatedBlog );
+    res.status(200).json(updatedBlog);
   } catch (error) {
     res.status(500).json({ message: error.toString() });
   }
@@ -35,5 +34,13 @@ const deleteBlog = async (req, res) => {
     res.status(500).json({ message: error.toString() });
   }
 };
-
-export default { getAllBlogs, updateBlog, deleteBlog };
+const createBlog = async (req, res) => {
+  try {
+    const { userId, content, images } = req.body;
+    const createBlog = await blogDao.createBlog(userId, content, images);
+    res.status(201).json({ message: "blog added successfully", createBlog });
+  } catch (error) {
+    res.status(500).json({ error: error.toString() });
+  }
+};
+export default { getAllBlogs, updateBlog, deleteBlog, createBlog };

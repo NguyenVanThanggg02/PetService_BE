@@ -103,7 +103,6 @@ usersRouter.post("/login", async (req, res, next) => {
         username: user.username,
         accessToken,
         refreshToken,
-        password: user.password,
         id: user._id,
         fullname: user.fullname,
         role: user.role,
