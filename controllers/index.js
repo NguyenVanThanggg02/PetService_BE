@@ -7,7 +7,6 @@ import medicineController from "./medicines.js";
 import blogController from "./blog.js";
 import cartController from "./cart.js";
 import productController from "./products.js";
-import orderController from "./order.js";
 
 export {
   commentsController,
@@ -19,5 +18,4 @@ export {
   productController,
   blogController,
   cartController,
-  orderController,
 };

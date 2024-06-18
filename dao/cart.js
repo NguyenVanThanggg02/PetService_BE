@@ -11,13 +11,12 @@ const fetchListCartOfUser = async (id) => {
     }
   };
   const removeListCartOfUser = async (productId) => {
-      try {
-          const cart = await Cart.deleteOne({ _id: productId }).exec();
-          return cart;
-      } catch (error) {
+    try {
+      const cart = await Cart.deleteMany({ productId: productId }).exec();
+      return cart;
+    } catch (error) {
       throw new Error(error.toString());
-          
-      }
+    }
   }
   const addProductToCart = async (userId, productId,categoryId, quantity ) => {
     try {
