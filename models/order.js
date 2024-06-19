@@ -1,20 +1,35 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import OrderItem from "./orderItem.js";
 
-const orderSchema = new mongoose.Schema(
-  {
-    username: { type: String, required: true },
-    fullname: { type: String, required: true },
-    email: { type: String, required: true },
-    address: { type: String, required: true },
-    phone: { type: String, required: true },
-    listCart: { type: Array, required: true },
-    total: { type: Number, required: true },
-    paymentMethod: { type: String, default: "cash" },
-    status: { type: String, default: "pending" },
+const orderSchema = new Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+    required: true,
   },
-  { timestamps: true }
-);
+ items: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "orderItems",
+  }],
+  totalAmount: {
+    type: Number,
+    required: true,
+  },
+  paymentMethod: {
+    type: String,
+    enum: ["COD", "zalopay"],
+    default: "COD",
+  },
+  status: {
+    type: String,
+    enum: ["Pending", "Processing", "Completed"],
+    default: "Pending",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const Order = mongoose.model("orders", orderSchema);
-
 export default Order;
-
