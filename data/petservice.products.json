@@ -4,13 +4,15 @@
       "$oid": "665eec7890ac8b0be0256ed6"
     },
     "name": "Dog Food Premium 2024",
-    "image":[  "https://img.fruugo.com/product/8/53/718160538_max.jpg",
-    "https://zoolove.com.ua/components/com_jshopping/files/img_products/full_happy-dog-baby-lamb-rice-zoolove.jpg"] ,
+    "image": [
+      "https://img.fruugo.com/product/8/53/718160538_max.jpg",
+      "https://zoolove.com.ua/components/com_jshopping/files/img_products/full_happy-dog-baby-lamb-rice-zoolove.jpg"
+    ],
     "quantity": 25,
     "description": "Premium dog food with full of nutrients, vitamins, and essential minerals to keep your pet healthy and energetic. Special formula with beef, chicken, and vegetables, free from preservatives and artificial additives.",
     "pettype": "Dog",
     "category": {
-      "$oid": "665eb88ed618b2e1117e1427"
+      "$oid": "665eb88ed618b2e1117e142a"
     },
     "price": 1000,
     "created_at": {
@@ -22,11 +24,13 @@
   },
   {
     "_id": {
-      "$oid": "665eed1e90ac8b0be0256ed9"
+      "$oid": "665eed1e90ac8b0be0256ed7"
     },
-    "name": "Dog Treats 2024",
-    "image": ["https://www.vetreport.net/wp-content/uploads/2024/01/Friends-farm-dog-treats-PR-image-scaled.jpg",
-  "https://cdn.webshopapp.com/shops/250002/files/452591844/supreme-tiny-friends-farm-dolly-dog-tasty-bones-ch.jpg"],
+    "name": "Đồ chơi chút chít cho chó hình đôi môi",
+    "image": [
+      "https://bizweb.dktcdn.net/100/229/172/products/do-choi-hinh-moi-2.jpg?v=1572973682090",
+      "https://img.ltwebstatic.com/images3_spmp/2023/12/07/11/1701918434984962d37cfccb2702092979b93b5732_square_thumbnail_405x552.jpg"
+    ],
     "quantity": 50,
     "description": "Chicken flavored treats for dogs, high in protein and low in fat, keeping your dog healthy and satisfied. The product is supplemented with calcium to strengthen bones and brighten teeth.",
     "pettype": "Dog",
@@ -42,83 +46,49 @@
     }
   },
   {
-    "name": "Cat Toy Feather Wand 2024",
+    "_id": {
+      "$oid": "665eed1e90ac8b0be0256ed8"
+    },
+    "name": "Chuông huấn luyện chó mèo",
     "image": [
-      "https://example.com/cat-toy-feather-wand1.jpg",
-      "https://example.com/cat-toy-feather-wand2.jpg"
+      "https://bizweb.dktcdn.net/100/229/172/products/chuong-huan-luyen-2.jpg?v=1572975014680",
+      "https://vn-test-11.slatic.net/p/f5891c3acfe02502f41545d789bd9e09.jpg"
     ],
-    "quantity": 100,
-    "description": "Interactive feather wand toy for cats, perfect for encouraging play and exercise. Made with safe and durable materials.",
-    "pettype": "Cat",
+    "quantity": 50,
+    "description": "Chicken flavored treats for dogs, high in protein and low in fat, keeping your dog healthy and satisfied. The product is supplemented with calcium to strengthen bones and brighten teeth.",
+    "pettype": "Dog",
     "category": {
       "$oid": "665eb88ed618b2e1117e1427"
     },
-    "price": 1500,
+    "price": 50000,
     "created_at": {
-      "$date": "2024-06-01T00:00:00Z"
+      "$date": "2024-06-04T00:00:00Z"
     },
     "updated_at": {
-      "$date": "2024-06-01T00:00:00Z"
+      "$date": "2024-06-04T00:00:00Z"
     }
   },
   {
-    "name": "Dog Flea & Tick Medicine 2024",
+    "_id": {
+      "$oid": "665eed1e90ac8b0be0256ed9"
+    },
+    "name": "Dog Treats 2024",
     "image": [
-      "https://example.com/dog-flea-tick-medicine1.jpg",
-      "https://example.com/dog-flea-tick-medicine2.jpg"
+      "https://www.nutrish.com/wp-content/uploads/2024/04/Nutrish%C2%AE-Burger-Bites-Beef-Recipe-With-Bison-Dog-Treats-5-oz-1024x1024.png",
+      "https://cdn.webshopapp.com/shops/250002/files/452591844/supreme-tiny-friends-farm-dolly-dog-tasty-bones-ch.jpg"
     ],
     "quantity": 50,
-    "description": "Effective treatment for fleas and ticks, specially formulated for dogs. Fast-acting and long-lasting protection.",
-    "pettype": "Dog",
-    "category": {
-      "$oid": "665eb88ed618b2e1117e1428"
-    },
-    "price": 3000,
-    "created_at": {
-      "$date": "2024-06-01T00:00:00Z"
-    },
-    "updated_at": {
-      "$date": "2024-06-01T00:00:00Z"
-    }
-  },
-  {
-    "name": "Dog Leash 2024",
-    "image": [
-      "https://example.com/dog-leash1.jpg",
-      "https://example.com/dog-leash2.jpg"
-    ],
-    "quantity": 200,
-    "description": "Durable and adjustable leash for dogs, made with high-quality materials. Ensures safety and comfort during walks.",
-    "pettype": "Dog",
-    "category": {
-      "$oid": "665eb88ed618b2e1117e1429"
-    },
-    "price": 2500,
-    "created_at": {
-      "$date": "2024-06-01T00:00:00Z"
-    },
-    "updated_at": {
-      "$date": "2024-06-01T00:00:00Z"
-    }
-  },
-  {
-    "name": "Cat Food Deluxe 2024",
-    "image": [
-      "https://example.com/cat-food-deluxe1.jpg",
-      "https://example.com/cat-food-deluxe2.jpg"
-    ],
-    "quantity": 75,
-    "description": "High-quality cat food with essential nutrients and vitamins. Supports overall health and well-being of your cat.",
-    "pettype": "Cat",
+    "description": "Chicken flavored treats for dogs, high in protein and low in fat, keeping your dog healthy and satisfied. The product is supplemented with calcium to strengthen bones and brighten teeth.",
+    "pettype": "Cat & Dog",
     "category": {
       "$oid": "665eb88ed618b2e1117e142a"
     },
-    "price": 3500,
+    "price": 50000,
     "created_at": {
-      "$date": "2024-06-01T00:00:00Z"
+      "$date": "2024-06-04T00:00:00Z"
     },
     "updated_at": {
-      "$date": "2024-06-01T00:00:00Z"
+      "$date": "2024-06-04T00:00:00Z"
     }
   }
 ]

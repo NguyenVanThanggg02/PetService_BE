@@ -17,12 +17,12 @@
     "$oid": "665eb88ed618b2e1117e1429"
   },
   "name": "Pet",
-  "description": "Products and accessories for dogs."
+  "description": "Products and accessories for pets."
 },
 {
   "_id": {
     "$oid": "665eb88ed618b2e1117e142a"
   },
   "name": "Food",
-  "description": "Products and accessories for cats."
+  "description": "Products and accessories for foods."
 }]

@@ -2,13 +2,17 @@ import express from "express";
 import createError from "http-errors";
 import Products from "../models/products.js";
 import { productController } from "../controllers/index.js";
-
+import uploadCloud from "../cloudinary.config.js";
 const productsRouter = express.Router();
 
 
 productsRouter.get('/last', productController.getLatestProducts)
 productsRouter.get('/filter/:cateId', productController.fetchProductsByCategory)
 productsRouter.get('/pettype/:pettype', productController.fetchProductsByPetType)
+productsRouter.put("/:id", productController.updateProduct);
+productsRouter.put("/upimage/:pid", uploadCloud.array("image",10), productController.upLoadImageProduct);
+productsRouter.post('/', uploadCloud.array('image',10), productController.createProduct);
+
 
 
 
@@ -101,3 +105,5 @@ productsRouter.get('/search/:name', async (req, res, next) => {
 
 
 export default productsRouter;
+
+
