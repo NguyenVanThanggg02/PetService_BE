@@ -19,5 +19,5 @@ export {
   productController,
   blogController,
   cartController,
-  orderController,
+  orderController
 };
