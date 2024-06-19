@@ -7,8 +7,9 @@ import productsRouter from "./products.js";
 import medicineRouter from "./medicines.js";
 import blogRouter from "./blogs.js";
 import cartRouter from "./cart.js";
+import orderRouter from "./order.js";
+import categoriesRouter from "./category.js"; 
 
-import categoriesRouter from "./category.js";
 export {
   commentRouter,
   userRouter,
@@ -20,4 +21,5 @@ export {
   categoriesRouter,
   blogRouter,
   cartRouter,
+  orderRouter
 };

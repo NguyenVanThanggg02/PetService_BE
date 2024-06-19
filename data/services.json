@@ -1,87 +1,22 @@
 [
-  {
-      "fullname": "Nguyễn Văn A",
-      "address": "123 Đường ABC, Quận 1, Thành phố Hồ Chí Minh",
-      "phone": "0123456789",
-      "email": "nguyenvana@example.com",
-      "type_service": "Chăm sóc thú cưng",
-      "service_option": "Tắm rửa",
-      "time": "2024-05-18T14:00:00",
-      "petname": "Bông",
-      "pettype": "Chó",
-      "breed": "Poodle",
-      "agepet": 3,
-      "weightpet": 5.2,
-      "note": "Chú ý vùng tai của Bông, dễ bị kích ứng.",
-      "createAt": "2024-05-17T08:00:00Z",
-      "updateAt": "2024-05-17T08:00:00Z"
-  },
-  {
-      "fullname": "Trần Thị B",
-      "address": "456 Đường XYZ, Quận 3, Thành phố Hồ Chí Minh",
-      "phone": "0987654321",
-      "email": "tranthib@example.com",
-      "type_service": "Khám bệnh thú y",
-      "service_option": "Khám tổng quát",
-      "time": "2024-05-19T10:30:00",
-      "petname": "Miu",
-      "pettype": "Mèo",
-      "breed": "Mèo Anh lông ngắn",
-      "agepet": 2,
-      "weightpet": 4.5,
-      "note": "Kiểm tra vùng bụng, có dấu hiệu không bình thường.",
-      "createAt": "2024-05-17T08:30:00Z",
-      "updateAt": "2024-05-17T08:30:00Z"
-  },
-  {
-      "fullname": "Lê Văn C",
-      "address": "789 Đường LMN, Quận 5, Thành phố Hồ Chí Minh",
-      "phone": "0912345678",
-      "email": "levanc@example.com",
-      "type_service": "Chăm sóc thú cưng",
-      "service_option": "Cắt tỉa lông",
-      "time": "2024-05-20T09:00:00",
-      "petname": "Rex",
-      "pettype": "Chó",
-      "breed": "Golden Retriever",
-      "agepet": 5,
-      "weightpet": 30,
-      "note": "Cắt tỉa gọn gàng, chú ý vùng chân.",
-      "createAt": "2024-05-17T09:00:00Z",
-      "updateAt": "2024-05-17T09:00:00Z"
-  },
-  {
-      "fullname": "Phạm Thị D",
-      "address": "321 Đường UVW, Quận 2, Thành phố Hồ Chí Minh",
-      "phone": "0934567890",
-      "email": "phamthid@example.com",
-      "type_service": "Chăm sóc thú cưng",
-      "service_option": "Tắm và cắt móng",
-      "time": "2024-05-21T15:00:00",
-      "petname": "Nemo",
-      "pettype": "Chó",
-      "breed": "Bulldog",
-      "agepet": 4,
-      "weightpet": 25,
-      "note": "Nemo rất năng động, cần kiên nhẫn khi chăm sóc.",
-      "createAt": "2024-05-17T09:30:00Z",
-      "updateAt": "2024-05-17T09:30:00Z"
-  },
-  {
-      "fullname": "Đỗ Văn E",
-      "address": "654 Đường OPQ, Quận 6, Thành phố Hồ Chí Minh",
-      "phone": "0945678901",
-      "email": "dovane@example.com",
-      "type_service": "Khám bệnh thú y",
-      "service_option": "Tiêm phòng",
-      "time": "2024-05-22T11:00:00",
-      "petname": "Kitty",
-      "pettype": "Mèo",
-      "breed": "Mèo Ba Tư",
-      "agepet": 1,
-      "weightpet": 3,
-      "note": "Kitty khá nhút nhát, cần nhẹ nhàng khi tiếp xúc.",
-      "createAt": "2024-05-17T10:00:00Z",
-      "updateAt": "2024-05-17T10:00:00Z"
-  }
-]
+    {
+      "name": "Tắm vệ sinh",
+      "description": "Dịch vụ tắm rửa toàn diện bao gồm tắm và cắt tóc",
+      "price": 150,
+      "duration": "15 minutes"
+    },
+    {
+      "name": "Tắm vệ sinh + cắt tỉa lông",
+      "description": "Dịch vụ tắm vệ sinh và cắt tỉa lông cho chó và mèo",
+      "price": 250,
+      "duration": "30 minutes"
+    },
+    {
+      "name": "Cạo + tắm vệ sinh + cắt tỉa lông",
+      "description": "Dịch vụ cạo lông, tắm vệ sinh và cắt tỉa lông toàn diện",
+      "price": 300,
+      "duration": "45 minutes"
+
+    }
+  ]
+  

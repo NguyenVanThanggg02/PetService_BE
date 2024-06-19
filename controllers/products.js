@@ -4,8 +4,8 @@ import Products from "../models/products.js";
 
 const getLatestProducts = async (req, res) => {
   try {
-    const latestProduct = await productDao.fetchLatestProduct();
-    res.status(200).json(latestProduct);
+    const lastestProduct = await productDao.fetchLatestProduct()
+    res.status(200).json(lastestProduct);
   } catch (error) {
     console.error("Error fetching latest product:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -94,5 +94,16 @@ const createProduct = async (req, res) => {
 };
 
 
-export default { getLatestProducts, fetchProductsByCategory, fetchProductsByPetType, updateProduct, upLoadImageProduct,createProduct }
+const deleteProduct = async (req, res) => {
+  try {
+    const deleteProduct = await productDao.deleteProduct(req.params.id);
+    res.status(200).json(deleteProduct);
+    console.log('Deleted products successfully');
+  } catch (error) {
+    res.status(500).json({ error: error.toString() });
+    console.log('Failed to delete product');
+  }
+};
+
+export default { getLatestProducts, fetchProductsByCategory, fetchProductsByPetType, updateProduct, upLoadImageProduct,createProduct,deleteProduct }
 

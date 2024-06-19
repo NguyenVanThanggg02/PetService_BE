@@ -10,9 +10,9 @@ const fetchListCartOfUser = async (id) => {
       throw new Error(error.toString());
     }
   };
-  const removeListCartOfUser = async (id) => {
+  const removeListCartOfUser = async (productId) => {
       try {
-          const cart = await Cart.deleteOne({ _id: id }).exec();
+          const cart = await Cart.deleteOne({ _id: productId }).exec();
           return cart;
       } catch (error) {
       throw new Error(error.toString());
@@ -29,6 +29,14 @@ const fetchListCartOfUser = async (id) => {
     }
   };
 
+  const updateCart = async (id, Uquantity) =>{
+    try {
+        const updateCartItem = await Cart.findOneAndUpdate({ _id: id}, Uquantity, {new:true}) ;
+        return updateCartItem;
+    } catch (error) {
+      throw new Error(error.toString());
+      
+    }
+  }
 
-
-  export default {fetchListCartOfUser, removeListCartOfUser, addProductToCart}
+  export default {fetchListCartOfUser, removeListCartOfUser, addProductToCart, updateCart}

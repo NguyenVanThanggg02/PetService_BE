@@ -65,8 +65,8 @@ usersRouter.get("/", async (req, res, next) => {
 
 usersRouter.post("/register", async (req, res, next) => {
   try {
-    const { username, password } = req.body;
-    if (!username || !password) {
+    const { username, password , fullname} = req.body;
+    if (!username || !password || !fullname) {
       throw createError.BadRequest("Yêu cầu nhập tên người dùng và mật khẩu");
     }
     const existingUser = await User.findOne({ username: username }).exec();
@@ -75,7 +75,7 @@ usersRouter.post("/register", async (req, res, next) => {
       password,
       parseInt(process.env.PASSWORD_SECRET)
     );
-    const newUser = new User({ username, password: hashPass });
+    const newUser = new User({fullname, username, password: hashPass });
     const savedUser = await newUser.save();
     const accessToken = await signAccessToken(savedUser._id);
     res.send({ accessToken, newUser });
@@ -103,7 +103,6 @@ usersRouter.post("/login", async (req, res, next) => {
         username: user.username,
         accessToken,
         refreshToken,
-        password: user.password,
         id: user._id,
         fullname: user.fullname,
         role: user.role,
@@ -131,6 +130,28 @@ usersRouter.post("/refresh-token", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});// Trong file usersRouter.js
+
+usersRouter.put("/:username", async (req, res, next) => {
+  try {
+    const { username } = req.params;
+    const updatedUserData = req.body; // Dữ liệu người dùng được gửi từ client
+
+    const updatedUser = await User.findOneAndUpdate(
+      { username: username },
+      updatedUserData,
+      { new: true } 
+    );
+
+    if (!updatedUser) {
+      throw createError(404, `Người dùng ${username} không tồn tại`);
+    }
+
+    res.send(updatedUser); // Trả về thông tin người dùng đã được cập nhật
+  } catch (error) {
+    next(error);
+  }
 });
+
 
 export default usersRouter;

@@ -77,15 +77,43 @@ const forgetPass = async (req, res) => {
 const changePass = async (req, res) => {
   try {
     const { username } = req.params;
+    const { oldPassword, newPassword } = req.body;
+
+    if (!username || !oldPassword || !newPassword) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Missing required fields" });
+    }
+
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ status: false, message: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Old password is incorrect" });
+    }
+
     const salt = await bcrypt.genSalt(10);
-    const password = await bcrypt.hash(req.body.password, salt);
-    const userPassword = await User.findOneAndUpdate(
-      { username: username },
-      { password: password },
-      { new: true }
-    );
-    res.status(200).json({ status: true, data: userPassword });
-  } catch (error) {}
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res
+      .status(200)
+      .json({ status: true, message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Error changing password:", error);
+    res
+      .status(500)
+      .json({ status: false, message: "Server error", error: error.message });
+  }
 };
 export default {
   getAllUsers,

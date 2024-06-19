@@ -12,9 +12,8 @@ productsRouter.get('/pettype/:pettype', productController.fetchProductsByPetType
 productsRouter.put("/:id", productController.updateProduct);
 productsRouter.put("/upimage/:pid", uploadCloud.array("image",10), productController.upLoadImageProduct);
 productsRouter.post('/', uploadCloud.array('image',10), productController.createProduct);
-
-
-
+productsRouter.get("/last", productController.getLatestProducts);
+productsRouter.delete("/:id", productController.deleteProduct); 
 
 // Get all products
 productsRouter.get("/", async (req, res, next) => {
@@ -88,7 +87,6 @@ productsRouter.get("/new", async (req, res, next) => {
   }
 });
 
-
 productsRouter.get('/search/:name', async (req, res, next) => {
   try {
     const name = req.params.name
@@ -105,5 +103,6 @@ productsRouter.get('/search/:name', async (req, res, next) => {
 
 
 export default productsRouter;
+
 
 
