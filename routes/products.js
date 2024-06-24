@@ -2,11 +2,17 @@ import express from "express";
 import createError from "http-errors";
 import Products from "../models/products.js";
 import { productController } from "../controllers/index.js";
-
+import uploadCloud from "../cloudinary.config.js";
 const productsRouter = express.Router();
 
-productsRouter.get("/last", productController.getLatestProducts);
+
+productsRouter.get('/last', productController.getLatestProducts)
+productsRouter.get('/filter/:cateId', productController.fetchProductsByCategory)
+productsRouter.get('/pettype/:pettype', productController.fetchProductsByPetType)
 productsRouter.put("/:id", productController.updateProduct);
+productsRouter.put("/upimage/:pid", uploadCloud.array("image",10), productController.upLoadImageProduct);
+productsRouter.post('/', uploadCloud.array('image',10), productController.createProduct);
+productsRouter.get("/last", productController.getLatestProducts);
 productsRouter.delete("/:id", productController.deleteProduct); 
 
 // Get all products
@@ -81,7 +87,22 @@ productsRouter.get("/new", async (req, res, next) => {
   }
 });
 
+productsRouter.get('/search/:name', async (req, res, next) => {
+  try {
+    const name = req.params.name
+    const rgx = (pattern) => new RegExp(`.*${pattern}.*`);
+    const searchRgx = rgx(name);
 
+    const searchResult = await Products.find({ name: { $regex: searchRgx, $options: "i" } }).populate("category")
+    res.send(searchResult)
+  } catch (error) {
+    throw new Error(error.toString());
+
+  }
+})
 
 
 export default productsRouter;
+
+
+

@@ -115,7 +115,6 @@ const changePass = async (req, res) => {
       .json({ status: false, message: "Server error", error: error.message });
   }
 };
-
 export default {
   getAllUsers,
   forgetPass,

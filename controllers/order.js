@@ -1,37 +1,51 @@
-import Order from "../models/order.js";
+import { orderDao } from "../dao/index.js";
 
-const createOrder = async (req, res) => {
-  const { username, fullname, email, address, phone, listCart, total } =
-    req.body;
-
+const getAllOrder = async (req, res) => {
   try {
-    const newOrder = new Order({
-      username,
-      fullname,
-      email,
-      address,
-      phone,
-      listCart,
-      total,
-    });
-
-    const savedOrder = await newOrder.save();
-    res.status(201).json(savedOrder);
+    const AllOrder = await orderDao.fetchAllOrder();
+    res.status(200).json(AllOrder);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.toString() });
   }
 };
 
-const getOrders = async (req, res) => {
+const getListOrderOfUser = async (req, res) => {
   try {
-    const orders = await Order.find();
-    res.status(200).json(orders);
+    const orderByUserId = req.params.id;
+    const orderList = await orderDao.fetchListOrderOfUser(orderByUserId);
+    if (orderList) {
+      res.status(200).json(orderList);
+    } else {
+      res.status(404).json("Not Found");
+    }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.toString() });
   }
 };
 
-export default {
-  createOrder,
-  getOrders,
+const updateOrder = async (req, res) => {
+  try {
+    const updateOrder = await orderDao.updateOrder(req.params.id, req.body);
+    res.status(200).json(updateOrder);
+    console.log("Updated order successfully");
+  } catch (error) {
+    res.status(500).json({ error: error.toString() });
+    console.log("Failed to order product");
+  }
 };
+
+const getOrderById = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const orderBId = await orderDao.fetchOrderById(orderId);
+    if (orderBId) {
+      res.status(200).json(orderBId);
+    } else {
+      res.status(404).json("not found");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.toString() });
+  }
+};
+
+export default { updateOrder, getListOrderOfUser, getOrderById, getAllOrder };

@@ -41,7 +41,7 @@ app.use("/toys", toyRouter);
 app.use("/medicines", medicineRouter);
 app.use("/products", productsRouter);
 app.use("/category", categoriesRouter);
-app.use('/search', searchRouter)
+// app.use('/search', searchRouter)
 app.use('/blogs', blogRouter)
 app.use('/cart', cartRouter)
 app.use('/payment', orderRouter)
