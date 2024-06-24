@@ -7,10 +7,12 @@ const orderSchema = new Schema({
     ref: "users",
     required: true,
   },
- items: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "orderItems",
-  }],
+  items: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "orderItems",
+    },
+  ],
   totalAmount: {
     type: Number,
     required: true,
@@ -25,6 +27,11 @@ const orderSchema = new Schema({
     enum: ["Pending", "Processing", "Completed"],
     default: "Pending",
   },
+  received: {
+    type: Boolean,
+    default: false,
+  },
+
   createdAt: {
     type: Date,
     default: Date.now,

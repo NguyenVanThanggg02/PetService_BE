@@ -6,5 +6,6 @@ const blogRouter = express.Router();
 blogRouter.get('/', blogController.getAllBlogs);  
 blogRouter.put('/:id', blogController.updateBlog);  
 blogRouter.delete('/:id', blogController.deleteBlog); 
+blogRouter.post('/', blogController.createBlog); 
 
 export default blogRouter;
