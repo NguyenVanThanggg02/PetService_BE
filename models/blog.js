@@ -8,6 +8,7 @@ const blogSchema = new Schema({
     images: [
         {
             type: String,
+            required: false,
         }
     ],
     comments: [
@@ -21,14 +22,6 @@ const blogSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
       },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    }
 }, {
     timestamps: true
 });
