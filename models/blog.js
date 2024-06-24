@@ -1,22 +1,23 @@
-import mongoose,{ Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const blogSchema = new Schema({
+const blogSchema = new Schema(
+  {
     content: {
-        type: String,
-        required: true,  
+      type: String,
+      required: true,
     },
     images: [
-        {
-            type: String,
-            required: false,
-        }
+      {
+        type: String,
+      },
+
     ],
     comments: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "comments",
-            required: false,
-        },
+      {
+        type: Schema.Types.ObjectId,
+        ref: "comments",
+        required: false,
+      },
     ],
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -26,7 +27,6 @@ const blogSchema = new Schema({
     timestamps: true
 });
 
-// Tạo model sử dụng schema
-const Blog =mongoose.model("blogs", blogSchema);
+const Blog = mongoose.model("blogs", blogSchema);
 
 export default Blog;
