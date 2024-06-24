@@ -10,6 +10,7 @@ const blogSchema = new Schema(
       {
         type: String,
       },
+
     ],
     comments: [
       {
@@ -19,14 +20,12 @@ const blogSchema = new Schema(
       },
     ],
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+}, {
+    timestamps: true
+});
 
 const Blog = mongoose.model("blogs", blogSchema);
 
