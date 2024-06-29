@@ -19,12 +19,12 @@ const orderSchema = new Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ["COD", "zalopay"],
+    enum: ["COD", "VnPay"],
     default: "COD",
   },
   status: {
     type: String,
-    enum: ["Pending", "Processing", "Completed"],
+    enum: ["Loading", "Pending", "Processing", "Completed","Cancel","Transfer"],
     default: "Pending",
   },
   received: {

@@ -7,6 +7,7 @@ import Order from "../models/order.js";
 import { orderController } from "../controllers/index.js";
 import OrderItem from "../models/orderItem.js";
 import Cart from "../models/cart.js";
+import crypto from "crypto";
 import Products from "../models/products.js";
 
 const orderRouter = express.Router();
@@ -15,14 +16,216 @@ orderRouter.get("/", orderController.getAllOrder);
 orderRouter.put("/:id", orderController.updateOrder);
 orderRouter.get("/user/:id", orderController.getListOrderOfUser);
 
-// api lấy 2 sản phẩm có lượt mua nhiều nhất theo quantity
+const Tokens = {
+  secretKey: "12345-67890-09876-54321",
+  mongoUrl: "mongodb://localhost:27017/chim",
+  refreshToken: "171222000-31032004",
+  vnp_TmnCode: "ERACZN7K",
+  vnp_HashSecret: "QCSRHTCRITPZHEKTZJGYUAPGMIIXZJBY",
+  vnp_Url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
+  vnp_Api: "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction",
+  vnp_ReturnUrl: "http://localhost:3000",
+};
+
+orderRouter.post("/vnpay-return/:id", async (req, res) => {
+  function sortObject(obj) {
+    let sorted = {};
+    let str = [];
+    let key;
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        str.push(encodeURIComponent(key));
+      }
+    }
+    str.sort();
+    for (key = 0; key < str.length; key++) {
+      sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, "+");
+    }
+    return sorted;
+  }
+  let vnp_Params = req.query;
+  let secureHash = vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHash"];
+  delete vnp_Params["vnp_SecureHashType"];
+  vnp_Params = sortObject(vnp_Params);
+  let config = Tokens;
+  let secretKey = config.vnp_HashSecret;
+  let signData = qs.stringify(vnp_Params, { encode: false });
+
+  let hmac = crypto.createHmac("sha512", secretKey);
+  let signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");
+
+  if (secureHash === signed) {
+    //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
+    if (req.query.vnp_TransactionStatus == "00") {
+      Order.findByIdAndUpdate(req.params.id, { status: "Transfer" }).then(
+        () => {
+          res.json({ message: "Orders successfully." });
+        }
+      );
+    } else {
+      Order.findByIdAndUpdate(req.params.id, { status: "Cancel" }).then(() => {
+        res.json({ message: "Order canceled successfully." });
+      });
+    }
+  } else {
+    res.render("success", { code: "97" });
+  }
+});
+
+// câpj nhật trạng thái đơn hàng
+orderRouter.post("/post/:id/:stt", async (req, res) => {
+  Order.findByIdAndUpdate(req.params.id, { status: req.params.stt }).then(
+    () => {
+      res.json({ message: "Orders updated successfully." });
+    }
+  );
+});
+
+orderRouter.post("/pay", async (req, res) => {
+  const { paymentMethod, listCart, profile, bankCode, language } = req.body;
+
+  
+  if (!paymentMethod || !listCart || !profile) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  try {
+    // Create order items
+    const orderItems = await Promise.all(
+      listCart.map(async (item) => {
+        const existingProduct = await OrderItem.findOne({
+          productId: item.productId._id,
+        });
+
+        if (existingProduct) {
+          existingProduct.quantity += item.quantity;
+          existingProduct.price += item.quantity * item.productId.price;
+          await existingProduct.save();
+          return existingProduct._id;
+        } else {
+          const productId = item.productId._id;
+          const quantityToReduce = item.quantity;
+
+          const dbProduct = await Products.findById(productId);
+          if (!dbProduct)
+            throw new Error(`Product with ID ${productId} not found`);
+
+          dbProduct.quantity -= quantityToReduce;
+          dbProduct.sold += quantityToReduce;
+          await dbProduct.save();
+
+          const orderItem = new OrderItem({
+            productId: dbProduct._id,
+            quantity: quantityToReduce,
+            // price: dbProduct.price,
+            price: quantityToReduce * dbProduct.price,
+
+          });
+          await orderItem.save();
+
+          return orderItem._id;
+        }
+      })
+    );
+
+    // Calculate total amount
+    const totalAmount = listCart.reduce(
+      (total, item) => total + item.productId.price * item.quantity,
+      0
+    );
+
+    // Create new order
+    const newOrder = new Order({
+      userId: profile,
+      items: orderItems,
+      totalAmount,
+      paymentMethod,
+      status: "Loading",
+      received: false,
+    });
+    // xoá sản phẩm trong giỏ hàng khi đã đặt hàng
+    await Cart.deleteMany({ userId: profile });
+    newOrder
+      .save()
+      .then((savedOrder) => {
+        // VNPAY payment integration
+        process.env.TZ = "Asia/Ho_Chi_Minh";
+        const date = new Date();
+        const createDate = moment(date).format("YYYYMMDDHHmmss");
+        const ipAddr =
+          req.headers["x-forwarded-for"] ||
+          req.connection.remoteAddress ||
+          req.socket.remoteAddress ||
+          req.connection.socket.remoteAddress;
+
+        const tmnCode = Tokens.vnp_TmnCode;
+        const secretKey = Tokens.vnp_HashSecret;
+        let vnpUrl = Tokens.vnp_Url;
+        const locale = language || "vn";
+        const currCode = "VND";
+
+        let vnp_Params = {
+          vnp_Version: "2.1.0",
+          vnp_Command: "pay",
+          vnp_TmnCode: tmnCode,
+          vnp_Locale: locale,
+          vnp_CurrCode: currCode,
+          vnp_TxnRef: savedOrder._id,
+          vnp_OrderInfo: `Thanh toan cho ma GD:${savedOrder._id}`,
+          vnp_OrderType: "other",
+          vnp_Amount: savedOrder.totalAmount * 100,
+          vnp_ReturnUrl: `${Tokens.vnp_ReturnUrl}/Bill/${savedOrder._id}`,
+          vnp_IpAddr: ipAddr,
+          vnp_CreateDate: createDate,
+        };
+
+        if (bankCode) {
+          vnp_Params["vnp_BankCode"] = bankCode;
+        }
+
+        vnp_Params = sortObject(vnp_Params);
+
+        // Logging parameters before signing for debugging
+        console.log("VNPAY Parameters before signing: ", vnp_Params);
+
+        const signData = qs.stringify(vnp_Params, { encode: false });
+        const hmac = crypto.createHmac("sha512", secretKey);
+        const signed = hmac
+          .update(Buffer.from(signData, "utf-8"))
+          .digest("hex");
+        vnp_Params["vnp_SecureHash"] = signed;
+
+        // Logging the signed URL for debugging
+        vnpUrl += "?" + qs.stringify(vnp_Params, { encode: false });
+        console.log("VNPAY Payment URL: ", vnpUrl);
+
+        res.json({ url: vnpUrl });
+      })
+      .catch((error) => {
+        throw new Error(error.message);
+      });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+
+  function sortObject(obj) {
+    const sorted = {};
+    const keys = Object.keys(obj).sort();
+    keys.forEach((key) => {
+      sorted[key] = encodeURIComponent(obj[key]).replace(/%20/g, "+");
+    });
+    return sorted;
+  }
+});
+// api lấy 3 sản phẩm có lượt mua nhiều nhất theo quantity
 orderRouter.get("/top-products", async (req, res) => {
   try {
     const result = await OrderItem.aggregate([
       {
         $group: {
           _id: "$productId",
-          totalQuantity: { $sum: "$quantity" },
+          totalQuantity: { $sum: "$quantity" }
         },
       },
       {
@@ -39,36 +242,50 @@ orderRouter.get("/top-products", async (req, res) => {
 
     // Lấy thông tin chi tiết của các sản phẩm bán chạy nhất
     const topProducts = await Products.find({
-      _id: { $in: result.map(item => item._id) }
+      _id: { $in: result.map((item) => item._id) },
     });
 
-    // Gộp thông tin chi tiết với số lượng sản phẩm đã bán 
-    const topProductsWithQuantity = topProducts.map(product => ({
-      ...product.toObject(), // chuyển từ mongodb về dạng js thông thường
-      totalQuantity: result.find(item => item._id.equals(product._id)).totalQuantity
-    }));
+    // Gộp thông tin chi tiết với số lượng sản phẩm đã bán
+    const topProductsWithQuantity = topProducts.map((product) => {
+      const quantitySold = result.find((item) => item._id.equals(product._id)).totalQuantity;
+      const totalPrice = product.price * quantitySold;
+      return {
+        ...product.toObject(),
+        totalQuantity: quantitySold,
+        totalPrice: totalPrice
+      };
+    });
 
-    // sắp xếp sản phẩm bán nhiều nhất lên đầu 
+    // sắp xếp sản phẩm bán nhiều nhất lên đầu
     topProductsWithQuantity.sort((a, b) => b.totalQuantity - a.totalQuantity);
 
     return res.status(200).json(topProductsWithQuantity);
-
   } catch (error) {
     console.log(error.message);
-    return res.status(500).json({ message: "Error retrieving the top products" });
+    return res
+      .status(500)
+      .json({ message: "Error retrieving the top products" });
+  }
+});
+
+
+// tính tổng tất cả các đơn hàng
+orderRouter.get('/calculate-total-amount', async (req, res) => {
+  try {
+    // Lấy tất cả các sản phẩm từ cơ sở dữ liệu
+    const orderItems = await OrderItem.find();
+
+    // Tính tổng số tiền dựa trên dữ liệu sản phẩm
+    const totalAmount = orderItems.reduce((total, item) => total + (item.price), 0);
+
+    return res.status(200).json({ totalAmount });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error calculating total amount' });
   }
 });
 
 orderRouter.get("/:id", orderController.getOrderById);
-
-
-const config = {
-  app_id: "2554",
-  key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn",
-  key2: "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf",
-  endpoint: "https://sb-openapi.zalopay.vn/v2/create",
-};
-
 
 orderRouter.post("/", async (req, res) => {
   const { paymentMethod, listCart, profile } = req.body;
@@ -99,11 +316,14 @@ orderRouter.post("/", async (req, res) => {
       const orderItems = await Promise.all(
         listCart.map(async (item) => {
           // Kiểm tra xem sản phẩm đã tồn tại trong cơ sở dữ liệu hay chưa
-          const existingProduct = await OrderItem.findOne({ productId: item.productId._id });
-      
+          const existingProduct = await OrderItem.findOne({
+            productId: item.productId._id,
+          });
+
           if (existingProduct) {
             // Nếu sản phẩm đã tồn tại, tăng số lượng của sản phẩm lên
             existingProduct.quantity += item.quantity;
+            existingProduct.price += item.quantity * item.productId.price;
             await existingProduct.save();
             return existingProduct._id;
           } else {
@@ -111,14 +331,13 @@ orderRouter.post("/", async (req, res) => {
             const orderItem = new OrderItem({
               productId: item.productId._id,
               quantity: item.quantity,
-              price: item.productId.price,
+              price: calculateTotal(listCart),
             });
             await orderItem.save();
             return orderItem._id;
           }
         })
       );
-
 
       // Create and save the order
       const order = new Order({
@@ -142,80 +361,13 @@ orderRouter.post("/", async (req, res) => {
       console.log(error.message);
       return res
         .status(500)
-        .json({ message: "Error saving the order to the database" });
+        .json({ message: "Lỗi khi lưu đơn hàng vào database" });
     }
-  }
-   else if (paymentMethod === "zalopay") {
-      const embed_data = {
-        redirecturl : 'http://localhost/3000/'
-      };
-
-      const items = [{}];
-      const transID = Math.floor(Math.random() * 1000000);
-      const order = {
-          app_id: config.app_id,
-          app_trans_id: `${moment().format('YYMMDD')}_${transID}`, // translation missing: vi.docs.shared.sample_code.comments.app_trans_id
-          app_user: "user123",
-          app_time: Date.now(), // miliseconds
-          item: JSON.stringify(items),
-          embed_data: JSON.stringify(embed_data),
-          amount: 50000,
-          description: `Payment for the order #${transID}`,
-          bank_code: "",
-      };
-      
-      // appid|app_trans_id|appuser|amount|apptime|embeddata|item
-      const data = config.app_id + "|" + order.app_trans_id + "|" + order.app_user + "|" + order.amount + "|" + order.app_time + "|" + order.embed_data + "|" + order.item;
-      order.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
-      
-    
-          try {
-            const  result = await axios.post(config.endpoint, null, { params: order })
-            // console.log(result.data)
-            return res.status(200).json(result.data)
-          } catch (error) {
-            console.log(error.message);
-          }
-  } 
-  else {
+  } else {
     return res
       .status(400)
       .json({ message: "Phương thức thanh toán không hợp lệ" });
   }
 });
-
-// Xử lý callback từ ZaloPay
-orderRouter.post("/callback", (req, res) => {
-  let result = {};
-
-  try {
-    let dataStr = req.body.data;
-    let reqMac = req.body.mac;
-
-    let mac = CryptoJS.HmacSHA256(dataStr, config.key2).toString();
-    console.log("mac =", mac);
-
-    if (reqMac !== mac) {
-      result.return_code = -1;
-      result.return_message = "mac không khớp";
-    } else {
-      let dataJson = JSON.parse(dataStr, config.key2);
-      console.log(
-        "Cập nhật trạng thái đơn hàng = thành công với app_trans_id =",
-        dataJson["app_trans_id"]
-      );
-
-      result.return_code = 1;
-      result.return_message = "thành công";
-    }
-  } catch (ex) {
-    result.return_code = 0;
-    result.return_message = ex.message;
-  }
-
-  res.json(result);
-});
-
-
 
 export default orderRouter;
