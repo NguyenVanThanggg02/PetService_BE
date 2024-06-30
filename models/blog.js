@@ -9,6 +9,7 @@ const blogSchema = new Schema(
     images: [
       {
         type: String,
+        required: false,
       },
 
     ],
