@@ -269,7 +269,7 @@ orderRouter.get("/top-products", async (req, res) => {
 });
 
 
-// tính tổng tất cả các đơn hàng
+// tính tổng tiền tất cả các đơn hàng
 orderRouter.get('/calculate-total-amount', async (req, res) => {
   try {
     // Lấy tất cả các sản phẩm từ cơ sở dữ liệu
@@ -282,6 +282,45 @@ orderRouter.get('/calculate-total-amount', async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Error calculating total amount' });
+  }
+});
+
+
+// tính tổng số lượng sản phẩm đã bán 
+orderRouter.get('/totalproducts', async(req, res) =>{
+  try {
+    // Lấy tất cả các sản phẩm từ cơ sở dữ liệu
+    const orderItems = await OrderItem.find();
+
+    // Tính tổng số lượng sản phẩm đã bán
+    const totalProducts = orderItems.reduce((total, item) => total + (item.quantity), 0);
+
+    return res.status(200).json({ totalProducts });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error calculating total products sold' });
+  }
+})
+
+
+// tổng doanh thu trong vòng 1 tuần 
+orderRouter.get('/calculate-total-amount-weekly', async (req, res) => {
+  try {
+    // Lấy ngày hiện tại
+    const currentDate = new Date();
+    // Lấy ngày 7 ngày trước
+    const oneWeekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+    // Lấy tất cả các sản phẩm từ cơ sở dữ liệu trong khoảng thời gian 1 tuần trước
+    const orderItems = await OrderItem.find({ createdAt: { $gte: oneWeekAgo, $lt: currentDate } });
+
+    // Tính tổng số tiền dựa trên dữ liệu sản phẩm
+    const totalAmount = orderItems.reduce((total, item) => total + item.price, 0);
+
+    return res.status(200).json({ totalAmount });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error calculating total amount for the week' });
   }
 });
 
