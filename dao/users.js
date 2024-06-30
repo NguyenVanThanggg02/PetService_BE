@@ -1,41 +1,42 @@
 import User from "../models/user.js";
 
-const fetchAllUsers = async () => {
+const fetAllUser = async () => {
   try {
     return await User.find({}).exec();
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.toString());
   }
 };
 
 const forgotPass = async (gmail) => {
   try {
-    return await User.findOne({ gmail }).exec();
+    return await User.findOne({ gmail: gmail }).exec();
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.toString());
   }
 };
+
+const fetchUserByUsername = async (username) => {
+  try {
+    return await User.findOne({ username: username }).exec();
+  } catch (error) {
+    throw new Error(error.toString());
+  }
+};
+
 
 const updateUser = async (username, userData) => {
   try {
     return await User.findOneAndUpdate(
-      { username },
+      { username: username },
       userData,
       { new: true }
     );
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.toString());
   }
 };
 
-const getUserByUsername = async (username) => {
-  try {
-    const getUser = await User.findOne({ username }).exec();
-    if (!getUser) throw new Error(`User ${username} not found`);
-    return getUser;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
 
-export default { fetchAllUsers, forgotPass, updateUser, getUserByUsername };
+
+export default { fetAllUser, forgotPass, updateUser, fetchUserByUsername };

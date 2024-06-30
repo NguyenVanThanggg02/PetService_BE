@@ -16,6 +16,8 @@ import {
   userRouter,
   productsRouter,
   categoriesRouter,
+  cartRouter,
+  orderRouter,
 } from "./routes/index.js";
 import searchRouter from "./routes/search.js";
 
@@ -39,8 +41,10 @@ app.use("/toys", toyRouter);
 app.use("/medicines", medicineRouter);
 app.use("/products", productsRouter);
 app.use("/category", categoriesRouter);
-app.use('/search', searchRouter)
+// app.use('/search', searchRouter)
 app.use('/blogs', blogRouter)
+app.use('/cart', cartRouter)
+app.use('/payment', orderRouter)
 
 
 app.use(function (req, res, next) {

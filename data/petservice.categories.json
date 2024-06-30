@@ -16,13 +16,13 @@
   "_id": {
     "$oid": "665eb88ed618b2e1117e1429"
   },
-  "name": "Dog",
-  "description": "Products and accessories for dogs."
+  "name": "Pet",
+  "description": "Products and accessories for pets."
 },
 {
   "_id": {
     "$oid": "665eb88ed618b2e1117e142a"
   },
-  "name": "Cat",
-  "description": "Products and accessories for cats."
+  "name": "Food",
+  "description": "Products and accessories for foods."
 }]

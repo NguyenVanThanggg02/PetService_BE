@@ -11,10 +11,13 @@ import {
 } from "../helpers/jwt_helper.js";
 import { userController } from "../controllers/index.js";
 import jwt from "jsonwebtoken";
-const usersRouter = express.Router();
-usersRouter.get('/', userController.getAllUsers)
-usersRouter.put('/:username', userController.updateUser)
 
+const usersRouter = express.Router();
+usersRouter.get('/',userController.getAllUsers)
+usersRouter.put('/:username',userController.updateUser)
+usersRouter.get("/:username", userController.getUserByUserName);
+// change password
+usersRouter.put("/changepass/:username", userController.changePass);
 usersRouter.post("/forgot-password", userController.forgetPass);
 
 usersRouter.post("/reset-password/:id/:token", (req, res) => {
@@ -37,8 +40,7 @@ usersRouter.post("/reset-password/:id/:token", (req, res) => {
   });
 });
 
-// change password
-usersRouter.put("/:username", userController.changePass);
+
 
 usersRouter.get("/", async (req, res, next) => {
   try {
@@ -50,21 +52,21 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 
-usersRouter.get("/:username", verifyAccessToken, async (req, res, next) => {
-  try {
-    const username = req.params.username;
-    const user = await User.findOne({ username: username }).exec();
-    if (!user) throw createError(404, `Người dùng ${username} không tồn tại`);
-    res.send(user);
-  } catch (error) {
-    next(error);
-  }
-});
+// usersRouter.get("/:username", verifyAccessToken, async (req, res, next) => {
+//   try {
+//     const username = req.params.username;
+//     const user = await User.findOne({ username: username }).exec();
+//     if (!user) throw createError(404, `Người dùng ${username} không tồn tại`);
+//     res.send(user);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 usersRouter.post("/register", async (req, res, next) => {
   try {
-    const { username, password } = req.body;
-    if (!username || !password) {
+    const { username, password , fullname} = req.body;
+    if (!username || !password || !fullname) {
       throw createError.BadRequest("Yêu cầu nhập tên người dùng và mật khẩu");
     }
     const existingUser = await User.findOne({ username: username }).exec();
@@ -73,7 +75,7 @@ usersRouter.post("/register", async (req, res, next) => {
       password,
       parseInt(process.env.PASSWORD_SECRET)
     );
-    const newUser = new User({ username, password: hashPass });
+    const newUser = new User({fullname, username, password: hashPass });
     const savedUser = await newUser.save();
     const accessToken = await signAccessToken(savedUser._id);
     res.send({ accessToken, newUser });
@@ -101,8 +103,9 @@ usersRouter.post("/login", async (req, res, next) => {
         username: user.username,
         accessToken,
         refreshToken,
-        password: user.password,
         id: user._id,
+        fullname: user.fullname,
+        role: user.role,
       });
   } catch (error) {
     next(error);
@@ -127,6 +130,28 @@ usersRouter.post("/refresh-token", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});// Trong file usersRouter.js
+
+usersRouter.put("/:username", async (req, res, next) => {
+  try {
+    const { username } = req.params;
+    const updatedUserData = req.body; // Dữ liệu người dùng được gửi từ client
+
+    const updatedUser = await User.findOneAndUpdate(
+      { username: username },
+      updatedUserData,
+      { new: true } 
+    );
+
+    if (!updatedUser) {
+      throw createError(404, `Người dùng ${username} không tồn tại`);
+    }
+
+    res.send(updatedUser); // Trả về thông tin người dùng đã được cập nhật
+  } catch (error) {
+    next(error);
+  }
 });
-usersRouter.get("/users/:username", verifyAccessToken, userController.getUserByUsername);
+
+
 export default usersRouter;

@@ -1,24 +1,37 @@
 import { userDao } from "../dao/index.js";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
+
 import bcrypt from "bcrypt";
 import User from "../models/user.js";
 
 const getAllUsers = async (req, res) => {
   try {
-    const allUsers = await userDao.fetchAllUsers();
-    res.status(200).json(allUsers);
+    const allUser = await userDao.fetAllUser();
+    res.status(200).json(allUser);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.toString() });
   }
 };
-
 const updateUser = async (req, res) => {
   try {
-    const updatedUser = await userDao.updateUser(req.params.username, req.body);
-    res.status(200).json(updatedUser);
+    res
+      .status(200)
+      .json(await userDao.updateUser(req.params.username, req.body));
+    console.log("Edit user successfully");
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      error: error.toString(),
+    });
+    console.log("Edit user failed");
+  }
+};
+const getUserByUserName = async (req, res) => {
+  try {
+    const username = await userDao.fetchUserByUsername(req.params.username);
+    res.status(200).json(username);
+  } catch (error) {
+    res.status(500).json({ error: error.toString() });
   }
 };
 
@@ -27,65 +40,85 @@ const forgetPass = async (req, res) => {
   try {
     const user = await userDao.forgotPass(gmail);
     if (!user) {
-      return res.status(404).send({ Status: "User not found" });
+      return res.send({ Status: "User not found" });
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
+    const token = jwt.sign({ id: user._id }, "jwt_secret_key", {
       expiresIn: "1d",
     });
-
-    const transporter = nodemailer.createTransport({
+    var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: "thang2k210@gmail.com",
+        pass: "bqvh osxx crfn giai",
       },
     });
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    var mailOptions = {
+      from: "thang2k210@gmail.com",
       to: gmail,
       subject: "Reset your password link",
       text: `http://localhost:3000/reset-password/${user._id}/${token}`,
     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
+    transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        return res.status(500).send({ Status: "Error sending email" });
+        console.log(error);
+        return res.send({ Status: "Error sending email" });
+      } else {
+        return res.send({ Status: "Success" });
       }
-      res.send({ Status: "Success" });
     });
   } catch (error) {
-    res.status(500).send({ Status: "Error", Error: error.message });
+    console.error(error);
+    return res.send({ Status: "Error", Error: error.message });
   }
 };
 
 const changePass = async (req, res) => {
   try {
     const { username } = req.params;
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
-    const updatedUser = await User.findOneAndUpdate(
-      { username },
-      { password: hashedPassword },
-      { new: true }
-    );
-    res.status(200).json({ status: true, data: updatedUser });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+    const { oldPassword, newPassword } = req.body;
 
-const getUserByUsername = async (req, res, next) => {
-  try {
-    console.log("Username:", req.params.username);
-    const getUser = await User.findOne({ username: req.params.username }).exec();
-    if (!getUser) {
-      return res.status(404).send({ error: `${req.params.username} not found` });
+    if (!username || !oldPassword || !newPassword) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Missing required fields" });
     }
-    res.send(getUser);
+
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ status: false, message: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Old password is incorrect" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res
+      .status(200)
+      .json({ status: true, message: "Password updated successfully" });
   } catch (error) {
-    next(error);
+    console.error("Error changing password:", error);
+    res
+      .status(500)
+      .json({ status: false, message: "Server error", error: error.message });
   }
 };
-
-export default { getAllUsers, forgetPass, changePass, updateUser, getUserByUsername };
+export default {
+  getAllUsers,
+  forgetPass,
+  changePass,
+  updateUser,
+  getUserByUserName,
+};
