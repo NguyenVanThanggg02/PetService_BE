@@ -99,41 +99,65 @@ orderRouter.post("/pay", async (req, res) => {
 
   try {
     // Create order items
+
     const orderItems = await Promise.all(
       listCart.map(async (item) => {
-        const existingProduct = await OrderItem.findOne({
-          productId: item.productId._id,
-        });
-
-        if (existingProduct) {
-          existingProduct.quantity += item.quantity;
-          existingProduct.price += item.quantity * item.productId.price;
-          await existingProduct.save();
-          return existingProduct._id;
-        } else {
-          const productId = item.productId._id;
-          const quantityToReduce = item.quantity;
-
-          const dbProduct = await Products.findById(productId);
-          if (!dbProduct)
-            throw new Error(`Product with ID ${productId} not found`);
-
-          dbProduct.quantity -= quantityToReduce;
-          dbProduct.sold += quantityToReduce;
-          await dbProduct.save();
-
-          const orderItem = new OrderItem({
-            productId: dbProduct._id,
-            quantity: quantityToReduce,
-            // price: dbProduct.price,
-            price: quantityToReduce * dbProduct.price,
-          });
-          await orderItem.save();
-
-          return orderItem._id;
+        const productId = item.productId._id;
+        const quantityToReduce = item.quantity;
+        const dbProduct = await Products.findById(productId);
+        if (!dbProduct) {
+          throw new Error(`Product with ID ${productId} not found`);
         }
+
+        dbProduct.quantity -= quantityToReduce;
+        dbProduct.sold += quantityToReduce;
+        await dbProduct.save();
+
+        const orderItem = new OrderItem({
+          productId: dbProduct._id,
+          quantity: quantityToReduce,
+          price: quantityToReduce * dbProduct.price,
+        });
+        await orderItem.save();
+        return orderItem._id;
       })
     );
+
+    // const orderItems = await Promise.all(
+    //   listCart.map(async (item) => {
+    //     const existingProduct = await OrderItem.findOne({
+    //       productId: item.productId._id,
+    //     });
+
+    //     if (existingProduct) {
+    //       existingProduct.quantity += item.quantity;
+    //       existingProduct.price += item.quantity * item.productId.price;
+    //       await existingProduct.save();
+    //       return existingProduct._id;
+    //     } else {
+    //       const productId = item.productId._id;
+    //       const quantityToReduce = item.quantity;
+
+    //       const dbProduct = await Products.findById(productId);
+    //       if (!dbProduct)
+    //         throw new Error(`Product with ID ${productId} not found`);
+
+    //       dbProduct.quantity -= quantityToReduce;
+    //       dbProduct.sold += quantityToReduce;
+    //       await dbProduct.save();
+
+    //       const orderItem = new OrderItem({
+    //         productId: dbProduct._id,
+    //         quantity: quantityToReduce,
+    //         // price: dbProduct.price,
+    //         price: quantityToReduce * dbProduct.price,
+    //       });
+    //       await orderItem.save();
+
+    //       return orderItem._id;
+    //     }
+    //   })
+    // );
 
     // Calculate total amount
     const totalAmount = listCart.reduce(
@@ -372,7 +396,7 @@ orderRouter.get("/monthly-revenue", async (req, res) => {
       const month = String(i + 1).padStart(2, "0"); // Định dạng tháng '01', '02'
       return {
         month,
-        //monthlyRevenue[month] || 0 đảm bảo rằng nếu một tháng không có dữ liệu doanh thu, 
+        //monthlyRevenue[month] || 0 đảm bảo rằng nếu một tháng không có dữ liệu doanh thu,
         //giá trị mặc định sẽ là 0.
         revenue: monthlyRevenue[month] || 0,
       };
@@ -406,31 +430,45 @@ orderRouter.post("/", async (req, res) => {
 
   if (paymentMethod === "COD") {
     try {
+      // Save order items and collect their IDs
+
       const orderItems = await Promise.all(
         listCart.map(async (item) => {
-          // Kiểm tra xem sản phẩm đã tồn tại trong cơ sở dữ liệu hay chưa
-          const existingProduct = await OrderItem.findOne({
+          const orderItem = new OrderItem({
             productId: item.productId._id,
+            quantity: item.quantity,
+            price: item.quantity * item.productId.price,
           });
-
-          if (existingProduct) {
-            // Nếu sản phẩm đã tồn tại, tăng số lượng của sản phẩm lên
-            existingProduct.quantity += item.quantity;
-            existingProduct.price += item.quantity * item.productId.price;
-            await existingProduct.save();
-            return existingProduct._id;
-          } else {
-            // Nếu sản phẩm chưa tồn tại, tạo mới sản phẩm
-            const orderItem = new OrderItem({
-              productId: item.productId._id,
-              quantity: item.quantity,
-              price: calculateTotal(listCart),
-            });
-            await orderItem.save();
-            return orderItem._id;
-          }
+          await orderItem.save();
+          return orderItem._id;
         })
       );
+
+      // const orderItems = await Promise.all(
+      //   listCart.map(async (item) => {
+      //     // Kiểm tra xem sản phẩm đã tồn tại trong cơ sở dữ liệu hay chưa
+      //     const existingProduct = await OrderItem.findOne({
+      //       productId: item.productId._id,
+      //     });
+
+      //     if (existingProduct) {
+      //       // Nếu sản phẩm đã tồn tại, tăng số lượng của sản phẩm lên
+      //       existingProduct.quantity += item.quantity;
+      //       existingProduct.price += item.quantity * item.productId.price;
+      //       await existingProduct.save();
+      //       return existingProduct._id;
+      //     } else {
+      //       // Nếu sản phẩm chưa tồn tại, tạo mới sản phẩm
+      //       const orderItem = new OrderItem({
+      //         productId: item.productId._id,
+      //         quantity: item.quantity,
+      //         price: calculateTotal(listCart),
+      //       });
+      //       await orderItem.save();
+      //       return orderItem._id;
+      //     }
+      //   })
+      // );
 
       // Create and save the order
       const order = new Order({
@@ -460,6 +498,47 @@ orderRouter.post("/", async (req, res) => {
     return res
       .status(400)
       .json({ message: "Phương thức thanh toán không hợp lệ" });
+  }
+});
+
+// huỷ đơn hàng
+orderRouter.put("/:id/cancel", async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id).populate("items");
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    if (
+      order.status === "Completed" ||
+      order.status === "Cancel" ||
+      order.status === "Processing"
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Order cannot be canceled at this stage" });
+    }
+
+    order.status = "Cancel";
+    order.cancelReason = req.body.cancelReason; // chọn lí do huỷ đơn hàng
+    order.totalAmount = 0;
+    await order.save();
+
+    // Cập nhật các OrderItem liên quan
+    for (const item of order.items) {
+      const orderItem = await OrderItem.findById(item._id);
+      if (orderItem) {
+        orderItem.price -= orderItem.price;
+        orderItem.quantity -= orderItem.quantity;
+        await orderItem.save();
+      }
+    }
+
+    return res.json({ message: "Order canceled successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error canceling order" });
   }
 });
 
