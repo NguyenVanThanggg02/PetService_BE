@@ -48,4 +48,38 @@ const getOrderById = async (req, res) => {
   }
 };
 
-export default { updateOrder, getListOrderOfUser, getOrderById, getAllOrder };
+const updateOrderStatus = async (req, res) => {
+  try {
+    const updateOrderStatus = await orderDao.updateOrderStatus(
+      req.params.id,
+      req.body
+    );
+    res.status(200).json(updateOrderStatus);
+    console.log("Updated status successfully");
+  } catch (error) {
+    res.status(500).json({ error: error.toString() });
+    console.log("Failed to update status");
+  }
+};
+
+const fetchOrderByStatus = async (req, res) => {
+  try {
+    const orderByStatus = await orderDao.fetchOrderByStatus(
+      req.params.status
+    );
+    res.status(200).json(orderByStatus);
+  } catch (error) {
+    res.status(500).json({
+      error: error.toString(),
+    });
+  }
+};
+
+export default {
+  updateOrder,
+  getListOrderOfUser,
+  getOrderById,
+  getAllOrder,
+  updateOrderStatus,
+  fetchOrderByStatus,
+};
