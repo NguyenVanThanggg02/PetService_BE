@@ -34,7 +34,10 @@ const orderSchema = new Schema(
         "Transfer",
       ],
       default: "Pending",
-    }
+    },
+    cancelReason: {
+      type: String,
+    },
   },
   {
     timestamps: true,
