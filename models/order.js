@@ -34,11 +34,7 @@ const orderSchema = new Schema(
         "Transfer",
       ],
       default: "Pending",
-    },
-    received: {
-      type: Boolean,
-      default: false,
-    },
+    }
   },
   {
     timestamps: true,
