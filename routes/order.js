@@ -333,7 +333,6 @@ orderRouter.get("/totalproducts", async (req, res) => {
       (total, item) => total + item.quantity,
       0
     );
-
     return res.status(200).json({ totalProducts });
   } catch (error) {
     console.error(error);
@@ -418,9 +417,11 @@ orderRouter.get("/:id", orderController.getOrderById);
 
 // thanh toán bằng phương thức ship cod
 orderRouter.post("/", async (req, res) => {
+  // lấy dữ liệu từ client gửi lên
   const { paymentMethod, listCart, profile } = req.body;
 
-  // Function to calculate the total amount of the order
+  console.log("nội dung yêu cầu đến:", req.body);
+  // tính tổng tiền của đơn hàng
   const calculateTotal = (listCart) => {
     return listCart.reduce(
       (total, item) => total + item.productId.price * item.quantity,
@@ -430,20 +431,6 @@ orderRouter.post("/", async (req, res) => {
 
   if (paymentMethod === "COD") {
     try {
-      // Save order items and collect their IDs
-
-      const orderItems = await Promise.all(
-        listCart.map(async (item) => {
-          const orderItem = new OrderItem({
-            productId: item.productId._id,
-            quantity: item.quantity,
-            price: item.quantity * item.productId.price,
-          });
-          await orderItem.save();
-          return orderItem._id;
-        })
-      );
-
       // const orderItems = await Promise.all(
       //   listCart.map(async (item) => {
       //     // Kiểm tra xem sản phẩm đã tồn tại trong cơ sở dữ liệu hay chưa
@@ -469,6 +456,21 @@ orderRouter.post("/", async (req, res) => {
       //     }
       //   })
       // );
+
+      // Save order items and collect their IDs
+      //Dùng Promise.all để xử lý song song việc
+      //lưu từng mặt hàng trong cart vào db
+      const orderItems = await Promise.all(
+        listCart.map(async (item) => {
+          const orderItem = new OrderItem({
+            productId: item.productId._id,
+            quantity: item.quantity,
+            price: item.quantity * item.productId.price,
+          });
+          await orderItem.save();
+          return orderItem._id;
+        })
+      );
 
       // Create and save the order
       const order = new Order({
@@ -505,11 +507,9 @@ orderRouter.post("/", async (req, res) => {
 orderRouter.put("/:id/cancel", async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate("items");
-
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
-
     if (
       order.status === "Completed" ||
       order.status === "Cancel" ||
