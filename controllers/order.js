@@ -64,7 +64,19 @@ const updateOrderStatus = async (req, res) => {
 
 const fetchOrderByStatus = async (req, res) => {
   try {
-    const orderByStatus = await orderDao.fetchOrderByStatus(
+    const orderByStatus = await orderDao.fetchOrderByStatus(req.params.status);
+    res.status(200).json(orderByStatus);
+  } catch (error) {
+    res.status(500).json({
+      error: error.toString(),
+    });
+  }
+};
+
+const fetchOrderByStatusOfUser = async (req, res) => {
+  try {
+    const orderByStatus = await orderDao.fetchOrderByStatusOfUser(
+      req.params.id,
       req.params.status
     );
     res.status(200).json(orderByStatus);
@@ -82,4 +94,5 @@ export default {
   getAllOrder,
   updateOrderStatus,
   fetchOrderByStatus,
+  fetchOrderByStatusOfUser
 };

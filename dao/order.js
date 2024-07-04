@@ -90,6 +90,24 @@ const fetchOrderByStatus = async (status) => {
   }
 };
 
+const fetchOrderByStatusOfUser = async (id, status) => {
+  try {
+    const orderByStatus = await Order.find({userId: id ,status: status })
+      .populate({
+        path: "items",
+        populate: {
+          path: "productId",
+          model: "products",
+        },
+      })
+      .exec();
+    return orderByStatus;
+  } catch (error) {
+    throw new Error(error.toString());
+  }
+};
+
+
 export default {
   updateOrder,
   fetchListOrderOfUser,
@@ -97,4 +115,5 @@ export default {
   fetchAllOrder,
   updateOrderStatus,
   fetchOrderByStatus,
+  fetchOrderByStatusOfUser
 };

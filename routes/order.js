@@ -413,6 +413,10 @@ orderRouter.get("/monthly-revenue", async (req, res) => {
 // lọc đơn hàng theo status
 orderRouter.get("/:status", orderController.fetchOrderByStatus);
 
+// lọc đơn hàng theo status của userId
+orderRouter.get("/:id/:status", orderController.fetchOrderByStatusOfUser);
+
+
 orderRouter.get("/:id", orderController.getOrderById);
 
 // thanh toán bằng phương thức ship cod
