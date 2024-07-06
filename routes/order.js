@@ -58,13 +58,26 @@ orderRouter.post("/vnpay-return/:id", async (req, res) => {
   if (secureHash === signed) {
     //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
     if (req.query.vnp_TransactionStatus == "00") {
-      Order.findByIdAndUpdate(req.params.id, { status: "Transfer" }).then(
-        () => {
-          res.json({ message: "Orders successfully." });
-        }
-      );
+      // Order.findByIdAndUpdate(req.params.id, { status: "Transfer" }).then(  // này là của nó
+      Order.findByIdAndUpdate(req.params.id, { status: "Pending" }).then(() => {
+        res.json({ message: "Orders successfully." });
+      });
     } else {
-      Order.findByIdAndUpdate(req.params.id, { status: "Cancel" }).then(() => {
+      Order.findByIdAndUpdate(req.params.id, {
+        status: "Cancel",
+        totalAmount: 0,
+      }).then(async () => {
+        const order = await Order.findById(req.params.id).populate("items");
+        if (order) {
+          order.items.forEach(async (item) => {
+            const orderItem = await OrderItem.findById(item._id);
+            if (orderItem) {
+              orderItem.price = 0;
+              orderItem.quantity = 0;
+              await orderItem.save();
+            }
+          });
+        }
         res.json({ message: "Order canceled successfully." });
       });
     }
@@ -73,61 +86,78 @@ orderRouter.post("/vnpay-return/:id", async (req, res) => {
   }
 });
 
-// câpj nhật trạng thái đơn hàng
-orderRouter.post("/post/:id/:stt", async (req, res) => {
-  Order.findByIdAndUpdate(req.params.id, { status: req.params.stt }).then(
-    () => {
-      res.json({ message: "Orders updated successfully." });
-    }
-  );
-});
+// cập nhật trạng thái đơn hàng
+
+orderRouter.put("/:id", orderController.updateOrderStatus);
 
 orderRouter.post("/pay", async (req, res) => {
   const { paymentMethod, listCart, profile, bankCode, language } = req.body;
 
-  
   if (!paymentMethod || !listCart || !profile) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
   try {
     // Create order items
+
     const orderItems = await Promise.all(
       listCart.map(async (item) => {
-        const existingProduct = await OrderItem.findOne({
-          productId: item.productId._id,
-        });
-
-        if (existingProduct) {
-          existingProduct.quantity += item.quantity;
-          existingProduct.price += item.quantity * item.productId.price;
-          await existingProduct.save();
-          return existingProduct._id;
-        } else {
-          const productId = item.productId._id;
-          const quantityToReduce = item.quantity;
-
-          const dbProduct = await Products.findById(productId);
-          if (!dbProduct)
-            throw new Error(`Product with ID ${productId} not found`);
-
-          dbProduct.quantity -= quantityToReduce;
-          dbProduct.sold += quantityToReduce;
-          await dbProduct.save();
-
-          const orderItem = new OrderItem({
-            productId: dbProduct._id,
-            quantity: quantityToReduce,
-            // price: dbProduct.price,
-            price: quantityToReduce * dbProduct.price,
-
-          });
-          await orderItem.save();
-
-          return orderItem._id;
+        const productId = item.productId._id;
+        const quantityToReduce = item.quantity;
+        const dbProduct = await Products.findById(productId);
+        if (!dbProduct) {
+          throw new Error(`Product with ID ${productId} not found`);
         }
+
+        dbProduct.quantity -= quantityToReduce;
+        dbProduct.sold += quantityToReduce;
+        await dbProduct.save();
+
+        const orderItem = new OrderItem({
+          productId: dbProduct._id,
+          quantity: quantityToReduce,
+          price: quantityToReduce * dbProduct.price,
+        });
+        await orderItem.save();
+        return orderItem._id;
       })
     );
+
+    // const orderItems = await Promise.all(
+    //   listCart.map(async (item) => {
+    //     const existingProduct = await OrderItem.findOne({
+    //       productId: item.productId._id,
+    //     });
+
+    //     if (existingProduct) {
+    //       existingProduct.quantity += item.quantity;
+    //       existingProduct.price += item.quantity * item.productId.price;
+    //       await existingProduct.save();
+    //       return existingProduct._id;
+    //     } else {
+    //       const productId = item.productId._id;
+    //       const quantityToReduce = item.quantity;
+
+    //       const dbProduct = await Products.findById(productId);
+    //       if (!dbProduct)
+    //         throw new Error(`Product with ID ${productId} not found`);
+
+    //       dbProduct.quantity -= quantityToReduce;
+    //       dbProduct.sold += quantityToReduce;
+    //       await dbProduct.save();
+
+    //       const orderItem = new OrderItem({
+    //         productId: dbProduct._id,
+    //         quantity: quantityToReduce,
+    //         // price: dbProduct.price,
+    //         price: quantityToReduce * dbProduct.price,
+    //       });
+    //       await orderItem.save();
+
+    //       return orderItem._id;
+    //     }
+    //   })
+    // );
 
     // Calculate total amount
     const totalAmount = listCart.reduce(
@@ -225,8 +255,11 @@ orderRouter.get("/top-products", async (req, res) => {
       {
         $group: {
           _id: "$productId",
-          totalQuantity: { $sum: "$quantity" }
+          totalQuantity: { $sum: "$quantity" },
         },
+      },
+      {
+        $match: { totalQuantity: { $gt: 0 } }, // Lọc sản phẩm có quantity > 0
       },
       {
         $sort: { totalQuantity: -1 },
@@ -247,12 +280,14 @@ orderRouter.get("/top-products", async (req, res) => {
 
     // Gộp thông tin chi tiết với số lượng sản phẩm đã bán
     const topProductsWithQuantity = topProducts.map((product) => {
-      const quantitySold = result.find((item) => item._id.equals(product._id)).totalQuantity;
+      const quantitySold = result.find((item) =>
+        item._id.equals(product._id)
+      ).totalQuantity;
       const totalPrice = product.price * quantitySold;
       return {
         ...product.toObject(),
         totalQuantity: quantitySold,
-        totalPrice: totalPrice
+        totalPrice: totalPrice,
       };
     });
 
@@ -268,68 +303,129 @@ orderRouter.get("/top-products", async (req, res) => {
   }
 });
 
-
 // tính tổng tiền tất cả các đơn hàng
-orderRouter.get('/calculate-total-amount', async (req, res) => {
+orderRouter.get("/calculate-total-amount", async (req, res) => {
   try {
     // Lấy tất cả các sản phẩm từ cơ sở dữ liệu
     const orderItems = await OrderItem.find();
 
     // Tính tổng số tiền dựa trên dữ liệu sản phẩm
-    const totalAmount = orderItems.reduce((total, item) => total + (item.price), 0);
+    const totalAmount = orderItems.reduce(
+      (total, item) => total + item.price,
+      0
+    );
 
     return res.status(200).json({ totalAmount });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Error calculating total amount' });
+    return res.status(500).json({ message: "Error calculating total amount" });
   }
 });
 
-
-// tính tổng số lượng sản phẩm đã bán 
-orderRouter.get('/totalproducts', async(req, res) =>{
+// tính tổng số lượng sản phẩm đã bán
+orderRouter.get("/totalproducts", async (req, res) => {
   try {
     // Lấy tất cả các sản phẩm từ cơ sở dữ liệu
     const orderItems = await OrderItem.find();
 
     // Tính tổng số lượng sản phẩm đã bán
-    const totalProducts = orderItems.reduce((total, item) => total + (item.quantity), 0);
-
+    const totalProducts = orderItems.reduce(
+      (total, item) => total + item.quantity,
+      0
+    );
     return res.status(200).json({ totalProducts });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Error calculating total products sold' });
+    return res
+      .status(500)
+      .json({ message: "Error calculating total products sold" });
   }
-})
+});
 
-
-// tổng doanh thu trong vòng 1 tuần 
-orderRouter.get('/calculate-total-amount-weekly', async (req, res) => {
+// tổng doanh thu trong vòng 1 tuần
+orderRouter.get("/calculate-total-amount-weekly", async (req, res) => {
   try {
     // Lấy ngày hiện tại
     const currentDate = new Date();
     // Lấy ngày 7 ngày trước
-    const oneWeekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const oneWeekAgo = new Date(
+      currentDate.getTime() - 7 * 24 * 60 * 60 * 1000
+    );
 
     // Lấy tất cả các sản phẩm từ cơ sở dữ liệu trong khoảng thời gian 1 tuần trước
-    const orderItems = await OrderItem.find({ createdAt: { $gte: oneWeekAgo, $lt: currentDate } });
+    const orderItems = await OrderItem.find({
+      createdAt: { $gte: oneWeekAgo, $lt: currentDate },
+    });
 
     // Tính tổng số tiền dựa trên dữ liệu sản phẩm
-    const totalAmount = orderItems.reduce((total, item) => total + item.price, 0);
+    const totalAmount = orderItems.reduce(
+      (total, item) => total + item.price,
+      0
+    );
 
     return res.status(200).json({ totalAmount });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Error calculating total amount for the week' });
+    return res
+      .status(500)
+      .json({ message: "Error calculating total amount for the week" });
   }
 });
 
+// API tính doanh thu theo tháng
+orderRouter.get("/monthly-revenue", async (req, res) => {
+  try {
+    // Lấy tất cả các sản phẩm từ cơ sở dữ liệu
+    const orderItems = await OrderItem.find();
+
+    // gộp các sản phẩm theo tháng và tính tổng doanh thu
+    const monthlyRevenue = orderItems.reduce((acc, item) => {
+      const month = moment(item.createdAt).format("MM");
+      //acc[month] là accumulator lưu trữ doanh thu của từng tháng.
+      //Nếu tháng chưa tồn tại trong accumulator, khởi tạo nó với giá trị 0.
+      if (!acc[month]) {
+        acc[month] = 0;
+      }
+      acc[month] += item.price;
+      return acc;
+    }, {});
+
+    // Tạo  mảng chứa  tháng từ 1 - 12 sau đó sắp xếp
+    const sortedMonthlyRevenue = Array.from({ length: 12 }, (_, i) => {
+      const month = String(i + 1).padStart(2, "0"); // Định dạng tháng '01', '02'
+      return {
+        month,
+        //monthlyRevenue[month] || 0 đảm bảo rằng nếu một tháng không có dữ liệu doanh thu,
+        //giá trị mặc định sẽ là 0.
+        revenue: monthlyRevenue[month] || 0,
+      };
+    });
+
+    return res.status(200).json(sortedMonthlyRevenue);
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ message: "Error calculating monthly revenue" });
+  }
+});
+
+// lọc đơn hàng theo status
+orderRouter.get("/:status", orderController.fetchOrderByStatus);
+
+// lọc đơn hàng theo status của userId
+orderRouter.get("/:id/:status", orderController.fetchOrderByStatusOfUser);
+
+
 orderRouter.get("/:id", orderController.getOrderById);
 
+// thanh toán bằng phương thức ship cod
 orderRouter.post("/", async (req, res) => {
+  // lấy dữ liệu từ client gửi lên
   const { paymentMethod, listCart, profile } = req.body;
 
-  // Function to calculate the total amount of the order
+  console.log("nội dung yêu cầu đến:", req.body);
+  // tính tổng tiền của đơn hàng
   const calculateTotal = (listCart) => {
     return listCart.reduce(
       (total, item) => total + item.productId.price * item.quantity,
@@ -339,42 +435,44 @@ orderRouter.post("/", async (req, res) => {
 
   if (paymentMethod === "COD") {
     try {
-      // Save order items and collect their IDs
       // const orderItems = await Promise.all(
       //   listCart.map(async (item) => {
-      //     const orderItem = new OrderItem({
+      //     // Kiểm tra xem sản phẩm đã tồn tại trong cơ sở dữ liệu hay chưa
+      //     const existingProduct = await OrderItem.findOne({
       //       productId: item.productId._id,
-      //       quantity: item.quantity,
-      //       price: item.productId.price,
       //     });
-      //     await orderItem.save();
-      //     return orderItem._id;
+
+      //     if (existingProduct) {
+      //       // Nếu sản phẩm đã tồn tại, tăng số lượng của sản phẩm lên
+      //       existingProduct.quantity += item.quantity;
+      //       existingProduct.price += item.quantity * item.productId.price;
+      //       await existingProduct.save();
+      //       return existingProduct._id;
+      //     } else {
+      //       // Nếu sản phẩm chưa tồn tại, tạo mới sản phẩm
+      //       const orderItem = new OrderItem({
+      //         productId: item.productId._id,
+      //         quantity: item.quantity,
+      //         price: calculateTotal(listCart),
+      //       });
+      //       await orderItem.save();
+      //       return orderItem._id;
+      //     }
       //   })
       // );
 
+      // Save order items and collect their IDs
+      //Dùng Promise.all để xử lý song song việc
+      //lưu từng mặt hàng trong cart vào db
       const orderItems = await Promise.all(
         listCart.map(async (item) => {
-          // Kiểm tra xem sản phẩm đã tồn tại trong cơ sở dữ liệu hay chưa
-          const existingProduct = await OrderItem.findOne({
+          const orderItem = new OrderItem({
             productId: item.productId._id,
+            quantity: item.quantity,
+            price: item.quantity * item.productId.price,
           });
-
-          if (existingProduct) {
-            // Nếu sản phẩm đã tồn tại, tăng số lượng của sản phẩm lên
-            existingProduct.quantity += item.quantity;
-            existingProduct.price += item.quantity * item.productId.price;
-            await existingProduct.save();
-            return existingProduct._id;
-          } else {
-            // Nếu sản phẩm chưa tồn tại, tạo mới sản phẩm
-            const orderItem = new OrderItem({
-              productId: item.productId._id,
-              quantity: item.quantity,
-              price: calculateTotal(listCart),
-            });
-            await orderItem.save();
-            return orderItem._id;
-          }
+          await orderItem.save();
+          return orderItem._id;
         })
       );
 
@@ -406,6 +504,45 @@ orderRouter.post("/", async (req, res) => {
     return res
       .status(400)
       .json({ message: "Phương thức thanh toán không hợp lệ" });
+  }
+});
+
+// huỷ đơn hàng
+orderRouter.put("/:id/cancel", async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id).populate("items");
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    if (
+      order.status === "Completed" ||
+      order.status === "Cancel" ||
+      order.status === "Processing"
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Order cannot be canceled at this stage" });
+    }
+
+    order.status = "Cancel";
+    order.cancelReason = req.body.cancelReason; // chọn lí do huỷ đơn hàng
+    order.totalAmount = 0;
+    await order.save();
+
+    // Cập nhật các OrderItem liên quan
+    for (const item of order.items) {
+      const orderItem = await OrderItem.findById(item._id);
+      if (orderItem) {
+        orderItem.price -= orderItem.price;
+        orderItem.quantity -= orderItem.quantity;
+        await orderItem.save();
+      }
+    }
+
+    return res.json({ message: "Order canceled successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error canceling order" });
   }
 });
 

@@ -61,9 +61,59 @@ const fetchOrderById = async (id) => {
     throw new Error(error.toString());
   }
 };
+
+const updateOrderStatus = async (id, statusData) => {
+  try {
+    const editStatus = await Order.findOneAndUpdate({ _id: id }, statusData, {
+      new: true,
+    }).exec();
+    return editStatus;
+  } catch (error) {
+    throw new Error(error.toString());
+  }
+};
+const fetchOrderByStatus = async (status) => {
+  try {
+    const orderByStatus = await Order.find({ status: status })
+      .populate("userId")
+      .populate({
+        path: "items",
+        populate: {
+          path: "productId",
+          model: "products",
+        },
+      })
+      .exec();
+    return orderByStatus;
+  } catch (error) {
+    throw new Error(error.toString());
+  }
+};
+
+const fetchOrderByStatusOfUser = async (id, status) => {
+  try {
+    const orderByStatus = await Order.find({userId: id ,status: status })
+      .populate({
+        path: "items",
+        populate: {
+          path: "productId",
+          model: "products",
+        },
+      })
+      .exec();
+    return orderByStatus;
+  } catch (error) {
+    throw new Error(error.toString());
+  }
+};
+
+
 export default {
   updateOrder,
   fetchListOrderOfUser,
   fetchOrderById,
   fetchAllOrder,
+  updateOrderStatus,
+  fetchOrderByStatus,
+  fetchOrderByStatusOfUser
 };

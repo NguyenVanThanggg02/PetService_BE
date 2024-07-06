@@ -35,9 +35,8 @@ const orderSchema = new Schema(
       ],
       default: "Pending",
     },
-    received: {
-      type: Boolean,
-      default: false,
+    cancelReason: {
+      type: String,
     },
   },
   {
