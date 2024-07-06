@@ -3,22 +3,20 @@ import mongoose from "mongoose";
 const serviceSchema = new mongoose.Schema(
   {
     name: {
-      type: String
+      type: String,
     },
     description: {
-      type: String
-      
+      type: String,
     },
     price: {
-      type: Number
+      type: Number,
     },
     duration: {
       type: String,
     },
   },
-  { timestamps: true } 
+  { timestamps: true }
 );
 
-const Service = mongoose.model("services", serviceSchema);
-
+const Service = mongoose.model("Service", serviceSchema);
 export default Service;

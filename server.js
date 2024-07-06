@@ -18,6 +18,9 @@ import {
   categoriesRouter,
   cartRouter,
   orderRouter,
+  serviceRouter,
+  bookingRouter,
+  slot_bookingRouter,
 } from "./routes/index.js";
 import searchRouter from "./routes/search.js";
 
@@ -45,7 +48,9 @@ app.use("/category", categoriesRouter);
 app.use('/blogs', blogRouter)
 app.use('/cart', cartRouter)
 app.use('/payment', orderRouter)
-
+app.use("/service", serviceRouter);
+app.use("/booking", bookingRouter);
+app.use("/slots", slot_bookingRouter);
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
