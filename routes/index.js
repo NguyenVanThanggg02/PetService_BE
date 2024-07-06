@@ -9,6 +9,9 @@ import blogRouter from "./blogs.js";
 import cartRouter from "./cart.js";
 import orderRouter from "./order.js";
 import categoriesRouter from "./category.js"; 
+import serviceRouter from "./service.js";
+import bookingRouter from "./booking.js";
+import slot_bookingRouter from "./slot_booking.js";
 
 export {
   commentRouter,
@@ -21,5 +24,8 @@ export {
   categoriesRouter,
   blogRouter,
   cartRouter,
-  orderRouter
+  orderRouter,
+  serviceRouter,
+  bookingRouter,
+  slot_bookingRouter,
 };
