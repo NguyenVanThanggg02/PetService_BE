@@ -1,0 +1,148 @@
+[{
+  "_id": {
+    "$oid": "66895b2362d2b68211d504d6"
+  },
+  "service_type": {
+    "$oid": "668959f11561a7b14634d6e5"
+  },
+  "customer_name": "Nguyen Van Thang",
+  "phone_number": "0368286888",
+  "email": "thanggg020325@gmail.com",
+  "address": "Sóc Sơn - Hà Nội",
+  "appointment_date": {
+    "$date": "2024-07-07T00:00:00.000Z"
+  },
+  "timeslot": {
+    "$oid": "66895ac01561a7b14634d6f7"
+  },
+  "order_status": "pending",
+  "pet_info": {
+    "pet_name": "tomi",
+    "species": "Mèo",
+    "breed": "Male",
+    "age": 2,
+    "weight": 5,
+    "notes": "cắt gội là ép hấp\n",
+    "_id": {
+      "$oid": "66895b2362d2b68211d504d7"
+    }
+  },
+  "createdAt": {
+    "$date": "2024-07-06T14:56:35.959Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-06T14:56:35.959Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66896971a4123cb7e734bfdc"
+  },
+  "service_type": {
+    "$oid": "668959f11561a7b14634d6e5"
+  },
+  "customer_name": "Nguyen Van Toan",
+  "phone_number": "9876543210",
+  "email": "thanggg020325@gmail.com",
+  "address": "456 Elm St, Othertown, USA",
+  "appointment_date": {
+    "$date": "2024-07-08T00:00:00.000Z"
+  },
+  "timeslot": {
+    "$oid": "66857f829f6348c47ae1d49c"
+  },
+  "order_status": "pending",
+  "pet_info": {
+    "pet_name": "Suneo",
+    "species": "Chó",
+    "breed": "male",
+    "age": 10,
+    "weight": 30,
+    "notes": "",
+    "_id": {
+      "$oid": "66896971a4123cb7e734bfdd"
+    }
+  },
+  "createdAt": {
+    "$date": "2024-07-06T15:57:37.090Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-06T15:57:37.090Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668aa46c15eeb30805ecb189"
+  },
+  "service_type": {
+    "$oid": "668959f11561a7b14634d6e5"
+  },
+  "customer_name": "Nguyen Van Toan",
+  "phone_number": "9876543210",
+  "email": "thanggg020325@gmail.com",
+  "address": "456 Elm St, Othertown, USA",
+  "appointment_date": {
+    "$date": "2024-07-07T00:00:00.000Z"
+  },
+  "timeslot": {
+    "$oid": "66857f829f6348c47ae1d49c"
+  },
+  "order_status": "pending",
+  "pet_info": {
+    "pet_name": "Suneo",
+    "species": "Mèo",
+    "breed": "male",
+    "age": 10,
+    "weight": 30,
+    "notes": "",
+    "_id": {
+      "$oid": "668aa46c15eeb30805ecb18a"
+    }
+  },
+  "createdAt": {
+    "$date": "2024-07-07T14:21:32.930Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-07T14:21:32.930Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668aa49d15eeb30805ecb1ab"
+  },
+  "service_type": {
+    "$oid": "668959f11561a7b14634d6e5"
+  },
+  "customer_name": "Nguyen Khac Phong Toan",
+  "phone_number": "1234567890",
+  "email": "vanthangdev@gmail.com",
+  "address": "123 Main St, Anytown, USA",
+  "appointment_date": {
+    "$date": "2024-07-07T00:00:00.000Z"
+  },
+  "timeslot": {
+    "$oid": "66857f829f6348c47ae1d49c"
+  },
+  "order_status": "completed",
+  "pet_info": {
+    "pet_name": "Nobita",
+    "species": "Mèo",
+    "breed": "Male",
+    "age": 6,
+    "weight": 10,
+    "notes": "",
+    "_id": {
+      "$oid": "668aa49d15eeb30805ecb1ac"
+    }
+  },
+  "createdAt": {
+    "$date": "2024-07-07T14:22:21.215Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-07T14:22:21.215Z"
+  },
+  "__v": 0
+}]

@@ -67,6 +67,65 @@ bookingRouter.post("/", async (req, res, next) => {
     next(error);
   }
 });
+// tính tổng tiền tất cả services ở trạng thái completed
+bookingRouter.get("/revenue-services", async (req, res, next) => {
+  try {
+    const completedBookings = await Booking.find({ order_status: "completed" })
+      .populate("service_type")
+      .exec();
+
+    const totalAmount = completedBookings.reduce((total, booking) => {
+      if (booking.service_type && booking.service_type.price) {
+        return total + booking.service_type.price;
+      }
+      return total;
+    }, 0);
+
+    res.status(200).json({ totalAmount });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// tổng dịch vụ đã book
+bookingRouter.get("/total-services", async (req, res) => {
+  try {
+    const totalservicesBooked = await Booking.countDocuments({
+      order_status: { $ne: "canceled" },
+    });
+    return res.status(200).json({ totalservicesBooked });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+//  lấy số lượng giống male và female
+// bookingRouter.get('/pet-breeds', async (req, res) => {
+//   try {
+//     const result = await Pet.aggregate([
+//       {
+//         $group: {
+//           _id: "$breed",
+//           count: { $sum: 1 }
+//         }
+//       }
+//     ]);
+
+//     // Tính toán số lượng đực và cái
+//     const { maleCount, femaleCount } = result.reduce((counts, item) => {
+//       if (item._id === 'Đực') {
+//         counts.maleCount += item.count;
+//       } else if (item._id === 'Cái') {
+//         counts.femaleCount += item.count;
+//       }
+//       return counts;
+//     }, { maleCount: 0, femaleCount: 0 });
+
+//     return res.status(200).json({ maleCount, femaleCount });
+//   } catch (error) {
+//     return res.status(500).json({ error: error.message });
+//   }
+// });
 
 // Sửa thông tin booking theo ID
 bookingRouter.put("/:id", async (req, res, next) => {
