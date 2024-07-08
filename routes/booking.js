@@ -87,6 +87,30 @@ bookingRouter.get("/revenue-services", async (req, res, next) => {
   }
 });
 
+// tổng tiền theo từng loại dịch vụ
+bookingRouter.get("/revenue-by-service-type", async (req, res, next) => {
+  try {
+    const completedBookings = await Booking.find({order_status: "completed" })
+    .populate("service_type")
+    .exec()
+    const revenueByServiceType = completedBookings.reduce((accumulator, booking) => {
+      const serviceName = booking.service_type.name;
+      const servicePrice = booking.service_type.price;
+
+      if (!accumulator[serviceName]) {
+        accumulator[serviceName] = 0;
+      }
+
+      accumulator[serviceName] += servicePrice;
+      return accumulator;
+    }, {});
+
+    res.status(200).json({ revenueByServiceType });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // tổng dịch vụ đã book
 bookingRouter.get("/total-services", async (req, res) => {
   try {
@@ -99,33 +123,26 @@ bookingRouter.get("/total-services", async (req, res) => {
   }
 });
 
-//  lấy số lượng giống male và female
-// bookingRouter.get('/pet-breeds', async (req, res) => {
-//   try {
-//     const result = await Pet.aggregate([
-//       {
-//         $group: {
-//           _id: "$breed",
-//           count: { $sum: 1 }
-//         }
-//       }
-//     ]);
-
-//     // Tính toán số lượng đực và cái
-//     const { maleCount, femaleCount } = result.reduce((counts, item) => {
-//       if (item._id === 'Đực') {
-//         counts.maleCount += item.count;
-//       } else if (item._id === 'Cái') {
-//         counts.femaleCount += item.count;
-//       }
-//       return counts;
-//     }, { maleCount: 0, femaleCount: 0 });
-
-//     return res.status(200).json({ maleCount, femaleCount });
-//   } catch (error) {
-//     return res.status(500).json({ error: error.message });
-//   }
-// });
+//  lấy số lượng giống đực và cái làm dịch vụ
+bookingRouter.get("/pet-breeds", async (req, res) => {
+  try {
+    const bookings = await Booking.find();
+    const { maleCount, femaleCount } = bookings.reduce((count, boking) => {
+        const breed = boking.pet_info.breed;
+        if (breed === "Đực") {
+          count.maleCount++;
+        } else if (breed === "Cái") {
+          count.femaleCount++;
+        }
+        return count;
+      },
+      { maleCount: 0, femaleCount: 0 }
+    );
+    return res.status(200).json({ maleCount, femaleCount });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
 
 // Sửa thông tin booking theo ID
 bookingRouter.put("/:id", async (req, res, next) => {
