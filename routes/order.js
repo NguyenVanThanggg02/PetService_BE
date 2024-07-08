@@ -90,6 +90,7 @@ orderRouter.post("/vnpay-return/:id", async (req, res) => {
 
 orderRouter.put("/:id", orderController.updateOrderStatus);
 
+// thanh toán bằng vnpay
 orderRouter.post("/pay", async (req, res) => {
   const { paymentMethod, listCart, profile, bankCode, language } = req.body;
 
@@ -253,6 +254,7 @@ orderRouter.get("/top-products", async (req, res) => {
   try {
     const result = await OrderItem.aggregate([
       {
+        //Gom nhóm các order item theo productId và tính tổng số lượng của từng sp
         $group: {
           _id: "$productId",
           totalQuantity: { $sum: "$quantity" },
@@ -285,6 +287,7 @@ orderRouter.get("/top-products", async (req, res) => {
       ).totalQuantity;
       const totalPrice = product.price * quantitySold;
       return {
+        // trả về đối tượng js với các thuộc tính của sp như id, name, price ...
         ...product.toObject(),
         totalQuantity: quantitySold,
         totalPrice: totalPrice,
