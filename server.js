@@ -18,6 +18,7 @@ import {
   categoriesRouter,
   cartRouter,
   orderRouter,
+  serviceRouter,
 } from "./routes/index.js";
 import searchRouter from "./routes/search.js";
 
@@ -45,6 +46,7 @@ app.use("/category", categoriesRouter);
 app.use('/blogs', blogRouter)
 app.use('/cart', cartRouter)
 app.use('/payment', orderRouter)
+app.use("/services",serviceRouter)
 
 
 app.use(function (req, res, next) {

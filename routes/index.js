@@ -9,6 +9,7 @@ import blogRouter from "./blogs.js";
 import cartRouter from "./cart.js";
 import orderRouter from "./order.js";
 import categoriesRouter from "./category.js"; 
+import serviceRouter from "./service.js";
 
 export {
   commentRouter,
@@ -21,5 +22,6 @@ export {
   categoriesRouter,
   blogRouter,
   cartRouter,
-  orderRouter
+  orderRouter,
+  serviceRouter
 };
