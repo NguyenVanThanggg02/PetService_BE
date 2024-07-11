@@ -30,6 +30,11 @@ const petSchema = new mongoose.Schema({
 
 const bookingSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: true,
+    },
     service_type: {
       type: Schema.Types.ObjectId,
       ref: "Service", // Thay "service" bằng tên collection của Service model

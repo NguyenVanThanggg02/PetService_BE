@@ -26,7 +26,7 @@ const Tokens = {
   vnp_Api: "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction",
   vnp_ReturnUrl: "http://localhost:3000",
 };
-
+// trả về trạng thái/bill của đơn hàng
 orderRouter.post("/vnpay-return/:id", async (req, res) => {
   function sortObject(obj) {
     let sorted = {};
@@ -100,7 +100,6 @@ orderRouter.post("/pay", async (req, res) => {
 
   try {
     // Create order items
-
     const orderItems = await Promise.all(
       listCart.map(async (item) => {
         const productId = item.productId._id;
@@ -110,7 +109,7 @@ orderRouter.post("/pay", async (req, res) => {
           throw new Error(`Product with ID ${productId} not found`);
         }
 
-        dbProduct.quantity -= quantityToReduce;
+        // dbProduct.quantity -= quantityToReduce;
         dbProduct.sold += quantityToReduce;
         await dbProduct.save();
 
@@ -309,7 +308,7 @@ orderRouter.get("/top-products", async (req, res) => {
 // tính tổng tiền tất cả các đơn hàng
 orderRouter.get("/calculate-total-amount", async (req, res) => {
   try {
-    // Lấy tất cả các sản phẩm từ cơ sở dữ liệu
+    // Lấy tất cả các sản phẩm từ db
     const orderItems = await OrderItem.find();
 
     // Tính tổng số tiền dựa trên dữ liệu sản phẩm
@@ -357,7 +356,7 @@ orderRouter.get("/calculate-total-amount-weekly", async (req, res) => {
 
     // Lấy tất cả các sản phẩm từ cơ sở dữ liệu trong khoảng thời gian 1 tuần trước
     const orderItems = await OrderItem.find({
-      createdAt: { $gte: oneWeekAgo, $lt: currentDate },
+      createdAt: { $gte: oneWeekAgo, $lt: currentDate }
     });
 
     // Tính tổng số tiền dựa trên dữ liệu sản phẩm
@@ -419,7 +418,6 @@ orderRouter.get("/:status", orderController.fetchOrderByStatus);
 // lọc đơn hàng theo status của userId
 orderRouter.get("/:id/:status", orderController.fetchOrderByStatusOfUser);
 
-
 orderRouter.get("/:id", orderController.getOrderById);
 
 // thanh toán bằng phương thức ship cod
@@ -427,7 +425,6 @@ orderRouter.post("/", async (req, res) => {
   // lấy dữ liệu từ client gửi lên
   const { paymentMethod, listCart, profile } = req.body;
 
-  console.log("nội dung yêu cầu đến:", req.body);
   // tính tổng tiền của đơn hàng
   const calculateTotal = (listCart) => {
     return listCart.reduce(
