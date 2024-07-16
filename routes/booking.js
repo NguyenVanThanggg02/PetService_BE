@@ -129,4 +129,23 @@ bookingRouter.delete("/:id", async (req, res, next) => {
   }
 });
 
+//cập nhật trạng thái lịch
+
+bookingRouter.put("/status/:id", async (req, res, next) => {
+  try {
+    const booking = await Booking.findByIdAndUpdate(
+      req.params.id,
+      { order_status: req.body.order_status },
+      { new: true }
+    );
+    if (!booking) {
+      throw createError(404, "Không tìm thấy booking");
+    }
+
+    res.send(booking);
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default bookingRouter;
