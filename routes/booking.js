@@ -1,11 +1,35 @@
 import express from "express";
 import createError from "http-errors";
 import Booking from "../models/booking.js";
-import User from "../models/user.js";
 import Timeslot from "../models/slots_booking.js";
 
 const bookingRouter = express.Router();
+// Lấy danh sách tất cả các booking theo user
+bookingRouter.get("/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const bookings = await Booking.find({ userId }).populate("service_type");
+    res.json(bookings);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
+// Lấy thông tin booking theo ID và userID
+bookingRouter.get("/detail/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const booking = await Booking.findOne({ _id: id })
+      .populate("service_type")
+      .populate("timeslot");
+    if (!booking) {
+      throw createError(404, "Không tìm thấy booking");
+    }
+    res.send(booking);
+  } catch (error) {
+    next(error);
+  }
+});
 // Lấy danh sách tất cả các booking
 bookingRouter.get("/", async (req, res, next) => {
   try {
@@ -20,23 +44,32 @@ bookingRouter.get("/", async (req, res, next) => {
     next(error);
   }
 });
-
-// Thêm booking mới
-bookingRouter.get("/", async (req, res, next) => {
+// Cập nhật trạng thái booking và lý do nếu chuyển thành 'cancel'
+bookingRouter.put("/update-status/:id", async (req, res, next) => {
   try {
-    const userId = req.query.userId; // Assuming userId is passed as a query parameter
-    if (!userId) {
-      throw createError(400, "Missing userId parameter");
+    const { cancel_reason } = req.body;
+    const booking = await Booking.findByIdAndUpdate(
+      req.params.id,
+      { order_status: "Cancel", cancel_reason },
+      { new: true }
+    );
+    if (!booking) {
+      throw createError(404, "Không tìm thấy booking");
     }
-
-    const bookings = await Booking.find({ userId })
+    res.send(booking);
+  } catch (error) {
+    next(error);
+  }
+});
+// Lấy danh sách booking theo userId và trạng thái
+bookingRouter.get("/:userId/:status", async (req, res, next) => {
+  try {
+    const { userId, status } = req.params;
+    const bookings = await Booking.find({ userId, order_status: status })
       .populate("service_type timeslot")
       .exec();
 
-    if (bookings.length === 0) {
-      throw createError(404, "Không tìm thấy dịch vụ");
-    }
-    res.send(bookings);
+    res.status(200).json(bookings);
   } catch (error) {
     next(error);
   }
@@ -173,17 +206,6 @@ bookingRouter.get("/pet-breeds", async (req, res) => {
     return res.status(200).json({ maleCount, femaleCount });
   } catch (error) {
     return res.status(500).json({ error: error.message });
-  }
-});
-
-// Lấy danh sách booking theo userId
-bookingRouter.get("/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const bookings = await Booking.find({ userId });
-    res.json(bookings);
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
