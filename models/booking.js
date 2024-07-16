@@ -68,16 +68,20 @@ const bookingSchema = new mongoose.Schema(
     order_status: {
       type: String,
       required: true,
-      enum: ["pending", "confirmed", "completed", "canceled"],
-      default: "pending",
+      enum: ["Pending", "Processing", "Completed", "Cancel"],
+      default: "Pending",
     },
     pet_info: {
       type: petSchema,
       required: true,
     },
+    cancel_reason: {
+      type: String,
+      default: "null",
+      require: true,
+    },
   },
   { timestamps: true }
 );
-
 const Booking = mongoose.model("Booking", bookingSchema);
 export default Booking;
