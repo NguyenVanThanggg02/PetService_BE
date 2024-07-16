@@ -8,6 +8,7 @@ import blogDao from "./blog.js";
 import productDao from "./products.js";
 import cartDao from "./cart.js";
 import orderDao from "./order.js";
+import serviceDao from "./service.js"
 
 export {
   commentDao,
@@ -19,5 +20,6 @@ export {
   productDao,
   blogDao,
   cartDao,
-  orderDao
+  orderDao,
+  serviceDao
 };

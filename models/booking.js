@@ -30,6 +30,11 @@ const petSchema = new mongoose.Schema({
 
 const bookingSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: true,
+    },
     service_type: {
       type: Schema.Types.ObjectId,
       ref: "Service", // Thay "service" bằng tên collection của Service model
@@ -63,16 +68,20 @@ const bookingSchema = new mongoose.Schema(
     order_status: {
       type: String,
       required: true,
-      enum: ["Pending", "Completed", "Canceled"],
+      enum: ["Pending", "Processing", "Completed", "Cancel"],
       default: "Pending",
     },
     pet_info: {
       type: petSchema,
       required: true,
     },
+    cancel_reason: {
+      type: String,
+      default: "null",
+      require: true,
+    },
   },
   { timestamps: true }
 );
-
 const Booking = mongoose.model("Booking", bookingSchema);
 export default Booking;
