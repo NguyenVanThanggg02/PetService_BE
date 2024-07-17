@@ -4,6 +4,92 @@ import Booking from "../models/booking.js";
 import Timeslot from "../models/slots_booking.js";
 
 const bookingRouter = express.Router();
+
+
+// tổng dịch vụ đã book
+bookingRouter.get("/total-services", async (req, res) => {
+  try {
+    const totalservicesBooked = await Booking.countDocuments({
+      order_status: { $ne: "Cancel" },
+    });
+    return res.status(200).json({ totalservicesBooked });
+  } catch (error) {
+    res.status(500).json({ message:error.toString() });
+  }
+});
+// tính tổng tiền tất cả services ở trạng thái completed
+bookingRouter.get("/revenue-services", async (req, res, next) => {
+  try {
+    const completedBookings = await Booking.find({ order_status: "Completed" })
+      .populate("service_type")
+      .exec();
+
+    const totalAmount = completedBookings.reduce((total, booking) => {
+      if (booking.service_type && booking.service_type.price) {
+        return total + booking.service_type.price;
+      }
+      return total;
+    }, 0);
+
+    res.status(200).json({ totalAmount });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+
+// tổng tiền theo từng loại dịch vụ
+bookingRouter.get("/revenue-by-service-type", async (req, res, next) => {
+  try {
+    const completedBookings = await Booking.find({ order_status: "Completed" })
+      .populate("service_type")
+      .exec();
+    const revenueByServiceType = completedBookings.reduce(
+      (accumulator, booking) => {
+        const serviceName = booking.service_type.name;
+        const servicePrice = booking.service_type.price;
+
+        if (!accumulator[serviceName]) {
+          accumulator[serviceName] = 0;
+        }
+
+        accumulator[serviceName] += servicePrice;
+        return accumulator;
+      },
+      {}
+    );
+
+    res.status(200).json({ revenueByServiceType });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+//  lấy số lượng giống đực và cái làm dịch vụ
+bookingRouter.get("/pet-breeds", async (req, res) => {
+  try {
+    const bookings = await Booking.find();
+    const { maleCount, femaleCount } = bookings.reduce(
+      (count, boking) => {
+        const breed = boking.pet_info.breed;
+        if (breed === "Đực") {
+          count.maleCount++;
+        } else if (breed === "Cái") {
+          count.femaleCount++;
+        }
+        return count;
+      },
+      { maleCount: 0, femaleCount: 0 }
+    );
+    return res.status(200).json({ maleCount, femaleCount });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+
 // Lấy danh sách tất cả các booking theo user
 bookingRouter.get("/:userId", async (req, res) => {
   try {
@@ -128,86 +214,7 @@ bookingRouter.post("/", async (req, res, next) => {
     next(error);
   }
 });
-// tính tổng tiền tất cả services ở trạng thái completed
-bookingRouter.get("/revenue-services", async (req, res, next) => {
-  try {
-    const completedBookings = await Booking.find({ order_status: "completed" })
-      .populate("service_type")
-      .exec();
 
-    const totalAmount = completedBookings.reduce((total, booking) => {
-      if (booking.service_type && booking.service_type.price) {
-        return total + booking.service_type.price;
-      }
-      return total;
-    }, 0);
-
-    res.status(200).json({ totalAmount });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// tổng tiền theo từng loại dịch vụ
-bookingRouter.get("/revenue-by-service-type", async (req, res, next) => {
-  try {
-    const completedBookings = await Booking.find({ order_status: "completed" })
-      .populate("service_type")
-      .exec();
-    const revenueByServiceType = completedBookings.reduce(
-      (accumulator, booking) => {
-        const serviceName = booking.service_type.name;
-        const servicePrice = booking.service_type.price;
-
-        if (!accumulator[serviceName]) {
-          accumulator[serviceName] = 0;
-        }
-
-        accumulator[serviceName] += servicePrice;
-        return accumulator;
-      },
-      {}
-    );
-
-    res.status(200).json({ revenueByServiceType });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// tổng dịch vụ đã book
-bookingRouter.get("/total-services", async (req, res) => {
-  try {
-    const totalservicesBooked = await Booking.countDocuments({
-      order_status: { $ne: "canceled" },
-    });
-    return res.status(200).json({ totalservicesBooked });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-//  lấy số lượng giống đực và cái làm dịch vụ
-bookingRouter.get("/pet-breeds", async (req, res) => {
-  try {
-    const bookings = await Booking.find();
-    const { maleCount, femaleCount } = bookings.reduce(
-      (count, boking) => {
-        const breed = boking.pet_info.breed;
-        if (breed === "Đực") {
-          count.maleCount++;
-        } else if (breed === "Cái") {
-          count.femaleCount++;
-        }
-        return count;
-      },
-      { maleCount: 0, femaleCount: 0 }
-    );
-    return res.status(200).json({ maleCount, femaleCount });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
 
 // Sửa thông tin booking theo ID
 bookingRouter.put("/:id", async (req, res, next) => {
@@ -247,6 +254,7 @@ bookingRouter.put("/:id", async (req, res, next) => {
     next(error);
   }
 });
+
 
 // Xóa booking theo ID
 bookingRouter.delete("/:id", async (req, res, next) => {
