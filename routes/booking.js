@@ -129,8 +129,8 @@ bookingRouter.get("/", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
-// Cập nhật trạng thái booking và lý do nếu chuyển thành 'cancel'
+}); 
+// Cập nhật trạng thái booking và lý do nếu chuyển thành 'cancel' api cho user
 bookingRouter.put("/update-status/:id", async (req, res, next) => {
   try {
     const { cancel_reason } = req.body;
@@ -271,6 +271,24 @@ bookingRouter.delete("/:id", async (req, res, next) => {
 
     timeslot.availableSlots += 1;
     await timeslot.save();
+
+    res.send(booking);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//cập nhật trạng thái lịch
+bookingRouter.put("/status/:id", async (req, res, next) => {
+  try {
+    const booking = await Booking.findByIdAndUpdate(
+      req.params.id,
+      { order_status: req.body.order_status },
+      { new: true }
+    );
+    if (!booking) {
+      throw createError(404, "Không tìm thấy booking");
+    }
 
     res.send(booking);
   } catch (error) {
